@@ -5,5 +5,6 @@ var users = require('../controllers/users.server.controller');
 
 module.exports = function(app) {
         app.route('/users')
-                .get(users.all);
+                .get(users.all)
+                .post(users.create);
 }

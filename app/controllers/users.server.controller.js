@@ -5,12 +5,45 @@ var User = require('mongoose').model('User');
 
 exports.all = function(req, res, next) {
         // Find all users
-        User.find({}, function(err, data) {
+        User.find({}, function(error, data) {
                 // Run the next middleware with the error message as the argument if an error is present. Otherwise, display the data.
-                if(err) {
-                        next(err);
+                if(error) {
+                        res.json(error);
                 } else {
                         res.json(data);
+                }
+        });
+}
+
+// Using the User model, create a new user using the json data passed (using body-parser) from the form.
+exports.create = function(req, res) {
+        var user = new User(req.body);
+
+        // Save the newly created user record
+        user.save(function(error, data) {
+                // After returning a duplicate key error, render a json with an error message
+                if(error) {
+                        if(error.code === 11000 || error.code === 11001) {
+
+                                // Add an error message regarding existing email or username before save.
+                                var messages = new Array();
+                                if(error.message.indexOf("username") > -1) {
+                                        messages.push("The username has been taken");
+                                }
+                                if(error.message.indexOf("email") > -1) {
+                                        messages.push("The email has been taken");
+                                }
+
+                                // Output the error messages
+                                res.json({"messages" : messages});
+                        }
+                } else {
+                        // Return the user data. Only the id, email, and username is shown
+                        res.json({
+                                "username": data.username,
+                                "email": data.email,
+                                "id": data._id
+                        });
                 }
         });
 }
