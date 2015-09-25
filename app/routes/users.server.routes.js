@@ -7,4 +7,6 @@ module.exports = function(app) {
         app.route('/users')
                 .get(users.all)
                 .post(users.create);
+        app.route('/users/:id')
+                .put(users.update);
 }

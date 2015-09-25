@@ -3,7 +3,22 @@
 */
 var User = require('mongoose').model('User');
 
-exports.all = function(req, res, next) {
+var getErrors = function(error) {
+        var messages = ["An error has occured"];
+        if(error.code === 11000 || error.code === 11001) {
+
+                // Add an error message regarding existing email or username before save.
+                if(error.message.indexOf("username") > -1) {
+                        messages.push("The username has been taken");
+                }
+                if(error.message.indexOf("email") > -1) {
+                        messages.push("The email has been taken");
+                }
+        }
+        return messages;
+}
+
+exports.all = function(req, res) {
         // Find all users
         User.find({}, function(error, data) {
                 // Run the next middleware with the error message as the argument if an error is present. Otherwise, display the data.
@@ -23,20 +38,26 @@ exports.create = function(req, res) {
         user.save(function(error, data) {
                 // After returning a duplicate key error, render a json with an error message
                 if(error) {
-                        if(error.code === 11000 || error.code === 11001) {
+                        // Output the error messages
+                        res.json({"messages" : getErrors(error)});
+                } else {
+                        // Return the user data. Only the id, email, and username is shown
+                        res.json({
+                                "username": data.username,
+                                "email": data.email,
+                                "id": data._id
+                        });
+                }
+        });
+}
 
-                                // Add an error message regarding existing email or username before save.
-                                var messages = new Array();
-                                if(error.message.indexOf("username") > -1) {
-                                        messages.push("The username has been taken");
-                                }
-                                if(error.message.indexOf("email") > -1) {
-                                        messages.push("The email has been taken");
-                                }
-
-                                // Output the error messages
-                                res.json({"messages" : messages});
-                        }
+exports.update = function(req, res) {
+        User.findByIdAndUpdate(req.params.id, {
+                $set: req.body
+        }, function(error, data) {
+                if(error) {
+                        // Output the error messages
+                        res.json({"messages" : getErrors(error)});
                 } else {
                         // Return the user data. Only the id, email, and username is shown
                         res.json({
