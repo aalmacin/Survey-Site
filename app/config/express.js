@@ -3,8 +3,11 @@
 */
 var express = require('express');
 
-module.exports = function() {
+module.exports = function(mongoose) {
+        var db = mongoose();
         var app = express();
+
+
 
         return app;
 }

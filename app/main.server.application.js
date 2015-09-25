@@ -2,7 +2,8 @@
         This file contains the main setup for the site. All the different configurations and cleaning up are to be run here.
 */
 module.exports = function() {
-        this.app = require('./config/express')();
+        this.mongoose = require('./config/mongoose');
+        this.app = require('./config/express')(this.mongoose);
 
         // This function is used to set the environment variable if an environment variable does not exist in the server. The default environment variable is dev.
         this.setEnvironmentVars = function() {
