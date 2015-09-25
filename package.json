@@ -1,0 +1,29 @@
+{
+  "name": "SurveySite",
+  "version": "1.0.0",
+  "description": "Ace Digital's Survey site is a very simple responsive survey site. The main objective of the site is for registered users to create survey questions and make it available to everyone.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aalmacin/Survey-Site.git"
+  },
+  "keywords": [
+    "Survey",
+    "Ace",
+    "Digital",
+    "Statistics",
+    "Reporting",
+    "MEAN",
+    "JavaScript"
+  ],
+  "author": "AJ Almacin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aalmacin/Survey-Site/issues"
+  },
+  "homepage": "https://github.com/aalmacin/Survey-Site"
+}
