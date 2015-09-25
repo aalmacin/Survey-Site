@@ -1,9 +1,2 @@
-var express = require('express');
-
-var app = express();
-
-app.use(function(req, res) {
-        res.send("Hello World!");
-});
-
-app.listen(3000);
+var Server = require('./app/main.server.application')();
+Server.start(3000, 'localhost');
