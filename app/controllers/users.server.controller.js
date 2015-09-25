@@ -68,3 +68,23 @@ exports.update = function(req, res) {
                 }
         });
 }
+
+exports.delete = function(req, res) {
+        User.findByIdAndRemove(req.params.id, function(error, data) {
+                if(error) {
+                        // Output the error messages
+                        res.json({"messages" : getErrors(error)});
+                } else {
+                        if(data) {
+                                // Return the user data. Only the id, email, and username is shown
+                                res.json({
+                                        "message": data.username + " has been deleted"
+                                });
+                        } else {
+                                res.json({
+                                        "message": "Can't find user to be deleted"
+                                });
+                        }
+                }
+        });
+}

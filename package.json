@@ -28,6 +28,7 @@
   "homepage": "https://github.com/aalmacin/Survey-Site",
   "dependencies": {
     "body-parser": "^1.14.0",
+    "method-override": "^2.3.5",
     "mongoose": "^4.1.8"
   }
 }
