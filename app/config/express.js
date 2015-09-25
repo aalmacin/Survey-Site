@@ -15,6 +15,7 @@ module.exports = function(mongoose) {
 
         // Add all the route files to the configuration.
         require('../routes/users.server.routes.js')(app);
+        require('../routes/surveys.server.routes.js')(app);
 
         return app;
 }

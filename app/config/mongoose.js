@@ -9,5 +9,6 @@ module.exports = function() {
 
         // Add all the model schemas
         require('../models/user.server.model.js');
+        require('../models/survey.server.model.js');
         return db;
 }
