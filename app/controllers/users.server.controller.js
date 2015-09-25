@@ -31,7 +31,7 @@ exports.all = function(req, res) {
 }
 
 // Using the User model, create a new user using the json data passed (using body-parser) from the form.
-exports.create = function(req, res) {
+exports.register = function(req, res) {
         var user = new User(req.body);
 
         // Save the newly created user record

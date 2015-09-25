@@ -6,7 +6,7 @@ var users = require('../controllers/users.server.controller');
 module.exports = function(app) {
         app.route('/users')
                 .get(users.all)
-                .post(users.create);
+                .post(users.register);
         app.route('/users/:id')
                 .put(users.update)
                 .delete(users.delete);
