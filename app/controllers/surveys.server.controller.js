@@ -119,7 +119,13 @@ exports.update = function(req, res) {
 }
 
 exports.delete = function(req, res) {
-        Survey.findByIdAndRemove(req.params.id, function(error, data) {
+        Survey.findById(req.params.id)
+        .populate('answers').exec(function(error, data) {
+                for(var i = 0; i < data._questions.length; i++) {
+                        Answer.remove({"_question" : data._questions[i]}, function(error) {});
+                }
+                Question.remove({"_survey" : data._id}, function(error) {});
+                Survey.findByIdAndRemove(data._id, function(error) {});
                 if(error) {
                         // Output the error messages
                         res.json({"messages" : getErrors(error)});
