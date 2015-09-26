@@ -8,6 +8,10 @@ var AnswerSchema = new mongoose.Schema({
                 type: String,
                 required: "Answer text is required"
         },
+        _question: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Survey'
+        },
         responses: [Date]
 });
 
@@ -16,16 +20,19 @@ var QuestionSchema = new mongoose.Schema({
                 type: String,
                 required: "Question text is required"
         },
-        answers: [AnswerSchema]
+        _answers: [{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Answer'
+        }],
+        _survey: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Survey'
+        }
 });
 
 var SurveySchema = new mongoose.Schema({
         description: {
                 type: String
-        },
-        owner: {
-                type: mongoose.Schema.ObjectId,
-                ref: 'User'
         },
         activation: {
                 type: Date,
@@ -35,7 +42,14 @@ var SurveySchema = new mongoose.Schema({
                 type: Date,
                 required: "You need to set an expiration date"
         },
-        questions: [QuestionSchema]
+        _owner: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User'
+        },
+        _questions: [{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Question'
+        }]
 });
 
 mongoose.model('Survey', SurveySchema);

@@ -10,4 +10,8 @@ module.exports = function(app) {
         app.route('/surveys/:id')
                 .put(surveys.update)
                 .delete(surveys.delete);
+        app.route('/surveys/:id/response')
+                .get(surveys.response);
+        app.route('/surveys/:answerid/respond')
+                .post(surveys.respond);
 }
