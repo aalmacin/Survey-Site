@@ -12,12 +12,9 @@ var getErrors = function(error) {
 }
 
 exports.all = function(req, res) {
-        // Find all surveys
-        // Populate the result to show questions and answers
         Survey.find({})
                 .deepPopulate('answers')
                 .exec(function(error, data) {
-                // Show a json page with the error message as the argument if an error is present. Otherwise, display the data.
                 if(error) {
                         res.json(error);
                 } else {
@@ -142,6 +139,15 @@ exports.delete = function(req, res) {
 }
 
 exports.response = function(req, res) {
+        Survey.findById(req.params.id)
+                .deepPopulate('answers')
+                .exec(function(error, data) {
+                if(error) {
+                        res.json(error);
+                } else {
+                        res.json(data);
+                }
+        });
 }
 
 exports.respond = function(req, res) {
