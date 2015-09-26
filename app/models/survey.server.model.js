@@ -2,6 +2,7 @@
         Create the model for the user. Other Survey related database methods are also added in here.
 */
 var mongoose = require('mongoose');
+var deepPopulate = require('mongoose-deep-populate')(mongoose);
 
 var AnswerSchema = new mongoose.Schema({
         text: {
@@ -50,6 +51,14 @@ var SurveySchema = new mongoose.Schema({
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Question'
         }]
+});
+
+SurveySchema.plugin(deepPopulate, {
+        rewrite: {
+                user: '_user',
+                _questions: '_questions',
+                answers: '_questions._answers'
+        }
 });
 
 mongoose.model('Survey', SurveySchema);

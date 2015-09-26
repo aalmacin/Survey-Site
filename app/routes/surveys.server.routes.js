@@ -7,7 +7,7 @@ module.exports = function(app) {
         app.route('/surveys')
                 .get(surveys.all)
                 .post(surveys.create);
-        app.route('/surveys/:id')
+        app.route('/surveys/:model/:id')
                 .put(surveys.update)
                 .delete(surveys.delete);
         app.route('/surveys/:id/response')
