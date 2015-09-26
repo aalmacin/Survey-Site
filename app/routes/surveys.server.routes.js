@@ -12,6 +12,6 @@ module.exports = function(app) {
                 .delete(surveys.delete);
         app.route('/surveys/:id/response')
                 .get(surveys.response);
-        app.route('/surveys/:answerid/respond')
+        app.route('/surveys/:id/respond')
                 .post(surveys.respond);
 }

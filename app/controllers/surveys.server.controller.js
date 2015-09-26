@@ -145,20 +145,11 @@ exports.response = function(req, res) {
 }
 
 exports.respond = function(req, res) {
-        Survey.findById(req.params.id)
-                .populate('_questions')
-                .populate('_answers')
-                .exec(function(error, data) {
-                        console.log(data);
-                        /*
-                        for (var x=0; x < data.questions.length; x++) {
-                                var question = data.questions[x];
-                                if (question._id.toString() === req.params.questionid) {
-                                        for (var y=0; y < question.answers.length; y++) {
-                                                console.log(question.answers[y]);
-                                        }
-                                }
-                        }
-                        */
-                });
+        Answer.findByIdAndUpdate(req.params.id, {$push: {"responses": Date.now()}}, function(error, data) {
+
+                if(error)
+                        res.json({"messages" : getErrors(error)});
+                else
+                        res.json(data);
+        });
 }
