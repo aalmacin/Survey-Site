@@ -32,6 +32,12 @@ var UserSchema = new mongoose.Schema({
                         {"validator": validatePasswordCharacters, "msg": 'Password must contain at least one lower case, upper case, number or symbol.'}
                 ]
         },
+        provider: {
+                type: String,
+                required: 'Provider is required'
+        },
+        providerId: String,
+        providerData: {},
         email: {
                 type: String,
                 unique: true,

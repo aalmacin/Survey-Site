@@ -7,12 +7,16 @@ var express = require('express'),
         bodyParser = require('body-parser');
 
 module.exports = function(mongoose) {
+        require('jade');
         var db = mongoose();
         var app = express();
 
         // Set the app to use body parser and make the files passed to the request (req.body) a json object
         app.use(methodOverride());
         app.use(bodyParser.json());
+
+        app.set('views', './app/views');
+        app.set('view engine', 'jade');
 
         // Setup our app to use passport middlewares
         app.use(passport.initialize());
@@ -21,6 +25,8 @@ module.exports = function(mongoose) {
         // Add all the route files to the configuration.
         require('../routes/users.server.routes.js')(app);
         require('../routes/surveys.server.routes.js')(app);
+
+        app.use('/', express.static('./public'));
 
         return app;
 }

@@ -33,27 +33,6 @@ exports.all = function(req, res) {
         });
 }
 
-// Using the User model, create a new user using the json data passed (using body-parser) from the form.
-exports.register = function(req, res) {
-        var user = new User(req.body);
-
-        // Save the newly created user record
-        user.save(function(error, data) {
-                // After returning a duplicate key error, render a json with an error message
-                if(error) {
-                        // Output the error messages
-                        res.json({"messages" : getErrors(error)});
-                } else {
-                        // Return the user data. Only the id, email, and username is shown
-                        res.json({
-                                "username": data.username,
-                                "email": data.email,
-                                "id": data._id
-                        });
-                }
-        });
-}
-
 exports.update = function(req, res) {
         User.findByIdAndUpdate(req.params.id, {
                 $set: req.body
@@ -92,8 +71,61 @@ exports.delete = function(req, res) {
         });
 }
 
-exports.signout = function(req, res) {
+exports.main = function(req, res) {
+        if (!req.user) {
+                res.render('login');
+        } else {
+                res.render('/');
+        }
+};
+
+// Using the User model, create a new user using the json data passed (using body-parser) from the form.
+exports.register = function(req, res) {
+        var user = new User(req.body);
+
+        user.provider = 'local';
+
+        // Save the newly created user record
+        user.save(function(error, data) {
+                // After returning a duplicate key error, render a json with an error message
+                if(error) {
+                        // Output the error messages
+                        res.json({"status": "error", "messages" : getErrors(error)});
+                } else {
+                        req.login(user, function(error) {
+                                if(error) {
+                                        res.json({"status": "error", "messages" : getErrors(error)});
+                                } else {
+                                        res.json({"status" : "success"});
+                                }
+                        });
+                }
+        });
+}
+
+exports.registerPage = function(req, res) {
+        if (!req.user) {
+                res.render('register');
+        } else {
+                res.render('/');
+        }
+};
+
+exports.login = function(req, res) {
+};
+
+
+exports.loginPage = function(req, res) {
+        if (!req.user) {
+                res.render('login');
+        } else {
+                res.render('/');
+        }
+};
+
+
+exports.logout = function(req, res) {
         req.logout();
-        res.redirect('/');
+        res.redirect('/login');
 };
 
