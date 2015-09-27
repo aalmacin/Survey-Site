@@ -52,12 +52,12 @@ UserSchema.pre('save', function(next) {
         next();
 });
 
-UserSchema.methods.checkPassword = function(pwd) {
+UserSchema.methods.authenticate = function(pwd) {
         return bcrypt.compareSync(pwd, this.password);
 }
 
 UserSchema.methods.hashPassword = function(pwd) {
-        return bcrypt.hashSync(pwd, bcrypt.genSaltSync(8));
+        return bcrypt.hashSync(pwd);
 }
 
 mongoose.model('User', UserSchema);

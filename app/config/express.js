@@ -4,6 +4,7 @@
 var express = require('express'),
         methodOverride = require('method-override'),
         passport = require('passport'),
+        session = require('express-session'),
         bodyParser = require('body-parser');
 
 module.exports = function(mongoose) {
@@ -17,6 +18,12 @@ module.exports = function(mongoose) {
 
         app.set('views', './app/views');
         app.set('view engine', 'jade');
+
+        app.use(session({
+                saveUninitialized: true,
+                resave: true,
+                secret: 'JUSTANOTHERTHINGTOBEREPLACEDLATer'
+        }));
 
         // Setup our app to use passport middlewares
         app.use(passport.initialize());

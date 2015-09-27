@@ -20,10 +20,6 @@ body(ng-app='mainApp')
                         .col-md-9
                                 h2 Register
                                 form(name='registrationForm', ng-submit="register()", role='form')
-                                        .errors(ng-messages='registrationForm.firstName.$error', role='alert')
-                                                span(ng-message='required') First Name is required
-                                        .errors(ng-messages='registrationForm.lastName.$error', role='alert')
-                                                span(ng-message='required') Last Name is required
                                         .errors(ng-messages='registrationForm.username.$error', role='alert')
                                                 span(ng-message='required') Username is required
                                         .errors(ng-messages='registrationForm.email.$error', role='alert')
@@ -38,12 +34,6 @@ body(ng-app='mainApp')
                                                 span(ng-repeat='error in errors')
                                                         | {{ error }}
                                                         p
-                                        .form-group
-                                                label(for='firstName') First Name
-                                                input#firstName.form-control(type='text', name='firstName', required='', ng-model='registrationUser.name.firstName', ,='', placeholder='Enter First Name')
-                                        .form-group
-                                                label(for='lastName') Last Name
-                                                input#lastName.form-control(type='text', name='lastName', required='', ng-model='registrationUser.name.lastName', ,='', placeholder='Enter Last Name')
                                         .form-group
                                                 label(for='username') Username
                                                 input#username.form-control(type='text', name='username', required='', ng-model='registrationUser.username', ,='', placeholder='Enter Username')

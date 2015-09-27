@@ -12,12 +12,18 @@ module.exports = function(app) {
                 .put(users.update)
                 .delete(users.delete);
         app.get('/', users.main);
-        app.route('/login')
-                .get(users.loginPage)
-                .post(passport.authenticate('local', {
-                        successRedirect: '/',
-                        failureRedirect: '/login'
-                }));
+        app.get('/login', users.loginPage);
+
+        app.post('/login', function(req, res, next) {
+                passport.authenticate('local', function(error, user, info) {
+                        if (error) { return next(error); }
+                        if (! user) {
+                                return res.send({ success : false, message : 'The Username/Password combination did not match.' });
+                        }
+                        return res.send({ success : true, message : 'Logged in ' + user.username });
+                })(req, res, next);
+        });
+
         app.route('/register')
                 .get(users.registerPage)
                 .post(users.register);

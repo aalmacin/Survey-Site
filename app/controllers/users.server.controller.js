@@ -71,11 +71,29 @@ exports.delete = function(req, res) {
         });
 }
 
+exports.registerPage = function(req, res) {
+        if (!req.user) {
+                res.render('register');
+        } else {
+                res.render('index');
+        }
+};
+
+exports.loginPage = function(req, res) {
+        console.log('users.ctrl line 115');
+        console.log(req.user);
+        if (!req.user) {
+                res.render('login');
+        } else {
+                res.render('index');
+        }
+};
+
 exports.main = function(req, res) {
         if (!req.user) {
                 res.render('login');
         } else {
-                res.render('/');
+                res.render('index');
         }
 };
 
@@ -102,26 +120,6 @@ exports.register = function(req, res) {
                 }
         });
 }
-
-exports.registerPage = function(req, res) {
-        if (!req.user) {
-                res.render('register');
-        } else {
-                res.render('/');
-        }
-};
-
-exports.login = function(req, res) {
-};
-
-
-exports.loginPage = function(req, res) {
-        if (!req.user) {
-                res.render('login');
-        } else {
-                res.render('/');
-        }
-};
 
 
 exports.logout = function(req, res) {
