@@ -7,7 +7,7 @@ var LoginCtrl = function ($scope, $http, $window) {
         $scope.login = function() {
                 $scope.errors = [];
                 $http.post('/login', $scope.loginUser).then(function(response) {
-                        if(!response.data.status) {
+                        if(!response.data.success) {
                                 $scope.errors = [response.data.message];
                                 $scope.loginUser = {};
                         } else {

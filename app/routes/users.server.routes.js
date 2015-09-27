@@ -20,7 +20,13 @@ module.exports = function(app) {
                         if (! user) {
                                 return res.send({ success : false, message : 'The Username/Password combination did not match.' });
                         }
-                        return res.send({ success : true, message : 'Logged in ' + user.username });
+                        req.login(user, function(error) {
+                                if(error) {
+                                        res.send({success: false, "messages" : getErrors(error)});
+                                } else {
+                                        return res.send({ success : true, message : 'Logged in ' + user.username });
+                                }
+                        });
                 })(req, res, next);
         });
 
