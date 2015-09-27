@@ -7,7 +7,7 @@ var Survey = require('mongoose').model('Survey'),
 
 var getErrors = function(error) {
         var messages = ["An error has occured"];
-        console.log(error);
+        console.log('Errors : ',error);
         return messages;
 }
 
@@ -51,7 +51,7 @@ var createAnswers = function(id, data) {
 exports.create = function(req, res) {
         var survey = createSurvey(req.body.survey);
         var errorMessages = new Array();
-        if (survey._id) {
+        if (survey._id && req.body.questions) {
                 for (var i=0; i < req.body.questions.length; i++) {
                         var questionJSON = req.body.questions[i];
 
@@ -74,13 +74,13 @@ exports.create = function(req, res) {
                                         }
                                         question._answers.push(answer);
                                 }
-                                question.save(function(err) { console.log(err);});
+                                question.save(function(err) { console.log('Question saving :', err);});
                                 survey._questions.push(question);
                         } else {
                                 errorMessages.push(question);
                         }
                 }
-                survey.save(function(err) { console.log(err);});
+                survey.save(function(err) { console.log('Survey saving', err);});
         } else {
                 errorMessages.push(survey);
         }

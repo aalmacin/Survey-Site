@@ -5,6 +5,9 @@ var User = require('mongoose').model('User');
 
 var getErrors = function(error) {
         var messages = ["An error has occured"];
+        if(error.errors && error.errors.password && error.errors.password.message) {
+                messages.push(error.errors.password.message);
+        }
         if(error.code === 11000 || error.code === 11001) {
 
                 // Add an error message regarding existing email or username before save.
