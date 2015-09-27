@@ -1,7 +1,8 @@
 /*
         Create the model for the user. Other User related database methods are also added in here.
 */
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+        bcrypt = require('bcrypt-nodejs');
 
 var validatePasswordMin = function(password) {
         return password && password.length > 6;
@@ -38,5 +39,19 @@ var UserSchema = new mongoose.Schema({
                 required: "Email required"
         }
 });
+
+
+UserSchema.pre('save', function(next) {
+        this.password = this.hashPassword(this.password);
+        next();
+});
+
+UserSchema.methods.checkPassword = function(pwd) {
+        return bcrypt.compareSync(pwd, this.password);
+}
+
+UserSchema.methods.hashPassword = function(pwd) {
+        return bcrypt.hashSync(pwd, bcrypt.genSaltSync(8));
+}
 
 mongoose.model('User', UserSchema);

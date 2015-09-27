@@ -10,4 +10,9 @@ module.exports = function(app) {
         app.route('/users/:id')
                 .put(users.update)
                 .delete(users.delete);
+        app.route('/register')
+                .get(users.register);
+        app.route('/').get(users.index);
+        app.route('/login')
+                .get(users.login);
 }

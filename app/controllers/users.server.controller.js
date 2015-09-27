@@ -23,7 +23,7 @@ var getErrors = function(error) {
 
 exports.all = function(req, res) {
         // Find all users
-        User.find({}, function(error, data) {
+        User.find({}, '-password -__v', function(error, data) {
                 // Run the next middleware with the error message as the argument if an error is present. Otherwise, display the data.
                 if(error) {
                         res.json(error);
@@ -91,3 +91,9 @@ exports.delete = function(req, res) {
                 }
         });
 }
+
+exports.signout = function(req, res) {
+        req.logout();
+        res.redirect('/');
+};
+
