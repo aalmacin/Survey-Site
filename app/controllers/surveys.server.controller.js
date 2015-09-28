@@ -49,46 +49,77 @@ var createAnswers = function(id, data) {
 
 // Using the Survey model, create a new survey using the json data passed (using body-parser) from the form.
 exports.create = function(req, res) {
-        var survey = createSurvey(req.body.survey);
         var errorMessages = new Array();
-        if (survey._id && req.body.questions) {
-                for (var i=0; i < req.body.questions.length; i++) {
-                        var questionJSON = req.body.questions[i];
-
-                        var question = createQuestions(survey._id, {
-                                "text" : questionJSON.text,
-                                "_survey" : survey._id
-                        });
-
-                        if (question._id) {
-                                for (var j=0; j < questionJSON.answers.length; j++) {
-                                        var answerJSON = questionJSON.answers[j];
-
-                                        var answer = createAnswers(question._id, {
-                                                "text" : answerJSON.text,
-                                                "_question" : question._id
-                                        });
-
-                                        if (!question._id) {
-                                                errorMessages.push(answer);
+        if(req.body.questions.length === 0) {
+                errorMessages.push("Need to add at least one question.");
+        } else {
+                for(var i = 0; i < req.body.questions.length; i++) {
+                        var bodyQuestion = req.body.questions[i];
+                        if(bodyQuestion.text.length === 0) {
+                                errorMessages.push("Question text must be added");
+                        } else if(bodyQuestion.answers.length < 2) {
+                                errorMessages.push("Need to add at least two answers for: " + req.body.questions[i].text);
+                        } else if(bodyQuestion.answers.length !== 0) {
+                                for(var j = 0; j < bodyQuestion.answers.length; j++) {
+                                        if(bodyQuestion.answers[j].text.length === 0) {
+                                                errorMessages.push("Answer text must be added");
                                         }
-                                        question._answers.push(answer);
                                 }
-                                question.save(function(err) { console.log('Question saving :', err);});
-                                survey._questions.push(question);
-                        } else {
-                                errorMessages.push(question);
                         }
                 }
-                survey.save(function(err) { console.log('Survey saving', err);});
+        }
+        if(req.user && req.user[0]) {
+                req.body.survey._owner = req.user[0]._id;
+                var survey = createSurvey(req.body.survey);
+                console.log(survey);
+                if (survey._id && req.body.questions) {
+                        for (var i=0; i < req.body.questions.length; i++) {
+                                var questionJSON = req.body.questions[i];
+
+                                var question = createQuestions(survey._id, {
+                                        "text" : questionJSON.text,
+                                        "_survey" : survey._id
+                                });
+
+                                if (question._id) {
+                                        for (var j=0; j < questionJSON.answers.length; j++) {
+                                                var answerJSON = questionJSON.answers[j];
+
+                                                var answer = createAnswers(question._id, {
+                                                        "text" : answerJSON.text,
+                                                        "_question" : question._id
+                                                });
+
+                                                if (!question._id) {
+                                                        errorMessages.push(answer);
+                                                }
+                                                question._answers.push(answer);
+                                        }
+                                        question.save(function(err) {
+                                                errorMessages.push(getErrors(err));
+                                        });
+                                        survey._questions.push(question);
+                                } else {
+                                        errorMessages.push(question);
+                                }
+                        }
+                        survey.save(function(err) {
+                                errorMessages.push(getErrors(err));
+                        });
+                } else {
+                        errorMessages.push(survey);
+                }
+
+                if (errorMessages.length === 0) {
+                        res.json(req.body);
+                }
         } else {
-                errorMessages.push(survey);
+                errorMessages.push("Need to login first");
         }
 
+
         if (errorMessages.length > 0) {
-                res.json(errorMessages);
-        } else {
-                res.json(req.body);
+                res.json({"error" : true, "errors" : errorMessages});
         }
 }
 

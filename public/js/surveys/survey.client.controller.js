@@ -2,9 +2,42 @@
         var mainApp = angular.module("mainApp");
 
         var SurveyCtrl = function ($scope, $http, $window) {
+                var currentDate = new Date();
+                var date = currentDate.toLocaleDateString();
+                var time = currentDate.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'})
+                currentDate = new Date(
+                        date + "," + time
+                );
+                $scope.survey = {
+                        "activation": currentDate,
+                        "expiration": currentDate
+                };
                 $scope.questions = [];
+                $scope.errors = new Array();
 
-                var createSurvey = function() {
+                $scope.createSurvey = function() {
+                        $http.post('/surveys', {
+                                survey: $scope.survey,
+                                questions: $scope.questions
+                        })
+                        .then(function(response) {
+                                $scope.errors = new Array();
+                                $scope.successMsg = null
+                                if(response.data.error) {
+                                        $scope.errors = response.data.errors;
+                                } else {
+                                        $scope.successMsg = "Successfully created survey.";
+                                        $scope.survey = {
+                                                "activation": currentDate,
+                                                "expiration": currentDate
+                                        };
+                                        $scope.questions = [];
+                                }
+
+                        }, function(response){
+                                console.log('Error');
+                                console.log(response);
+                        });
                 }
 
 
@@ -28,7 +61,7 @@
                                 }
                                 c++;
                         }
-                        question.answers.push({id: question.answers.length});
+                        question.answers.pop();
                         return false;
                 }
 
