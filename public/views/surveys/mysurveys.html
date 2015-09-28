@@ -5,11 +5,16 @@
                         <th>Description</th>
                         <th>Expiration Date</th>
                         <th>Submitted by</th>
+                        <th>Actions</th>
+                </tr>
+                <tr ng-show="surveys.length === 0">
+                        <td colspan="3">There are no surveys found</td>
                 </tr>
                 <tr ng-repeat="survey in surveys">
                         <td>{{ survey.description }}</td>
                         <td>{{ survey.expirationDate }}</td>
                         <td>{{ survey._owner.username }}</td>
+                        <td><a href="/#/surveys/{{ survey._id }}"><button class="btn btn-default">Respond</button></a></td>
                 </tr>
         </table>
 </div>

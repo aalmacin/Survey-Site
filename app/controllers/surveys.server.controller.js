@@ -240,3 +240,20 @@ exports.respond = function(req, res) {
         }
         res.redirect('/allsurveys#/?msg=Successfully sent a response');
 }
+
+exports.mysurveys = function(req, res) {
+        if(req.user && req.user[0]) {
+                Survey.find({'_owner' : req.user[0]._id})
+                        .populate('_owner', 'username')
+                        .deepPopulate('answers')
+                        .exec(function(error, data) {
+                        if(error) {
+                                res.json(error);
+                        } else {
+                                res.json(data);
+                        }
+                });
+        } else {
+                res.json({"messages" : "Need to login"});
+        }
+}

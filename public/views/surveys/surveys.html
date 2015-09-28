@@ -10,6 +10,9 @@
                         <th>Created by</th>
                         <th>Actions</th>
                 </tr>
+                <tr ng-show="surveys.length === 0">
+                        <td colspan="3">There are no active surveys found</td>
+                </tr>
                 <tr ng-repeat="survey in surveys">
                         <td>{{ survey.description }}</td>
                         <td>{{ survey.expirationDate }}</td>

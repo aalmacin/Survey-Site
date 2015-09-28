@@ -102,7 +102,7 @@
                 }
 
                 if ($("#mySurveysPage").length > 0) {
-                        $http.get('/surveys').then(function(response) {
+                        $http.get('/mysurveys').then(function(response) {
                                 $scope.surveys = response.data;
                         });
                 }

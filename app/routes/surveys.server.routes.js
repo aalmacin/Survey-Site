@@ -11,6 +11,8 @@ module.exports = function(app) {
                 .post(surveys.create);
         app.route('/surveys/:id')
                 .delete(surveys.delete);
+        app.route('/mysurveys')
+                .get(surveys.mysurveys);
         app.route('/surveys/:model/:id')
                 .put(surveys.update);
         app.route('/surveys/:id/response')
