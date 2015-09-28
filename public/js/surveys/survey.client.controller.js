@@ -22,6 +22,7 @@
         }
 
         var SurveyCtrl = function ($scope, $http, $location, $window, $routeParams) {
+                $scope.message = $location.search().msg;
                 if ($("#surveyCreatePage").length > 0) {
                         var currentDate = new Date();
                         var date = currentDate.toLocaleDateString();
@@ -95,7 +96,6 @@
                 }
 
                 if ($("#allSurveys").length > 0) {
-                        $scope.message = $location.search().msg;
                         $http.get('/surveys').then(function(response) {
                                 $scope.surveys = response.data;
                         });

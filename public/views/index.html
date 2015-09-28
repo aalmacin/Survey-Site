@@ -1,15 +1,20 @@
 <h2>Surveys</h2>
+<div ng-show='message.length > 0' class="alert alert-success">
+        {{ message }}
+</div>
 <div id="allSurveys">
         <table class="table">
                 <tr>
                         <th>Description</th>
                         <th>Expiration Date</th>
                         <th>Submitted by</th>
+                        <th>Actions</th>
                 </tr>
                 <tr ng-repeat="survey in surveys">
                         <td>{{ survey.description }}</td>
                         <td>{{ survey.expirationDate }}</td>
                         <td>{{ survey._owner.username }}</td>
+                        <td><a href="/allsurveys#/respond/{{ survey._id }}"><button class="btn btn-default">Respond</button></a></td>
                 </tr>
         </table>
 </div>

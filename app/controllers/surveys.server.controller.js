@@ -208,7 +208,11 @@ exports.delete = function(req, res) {
 }
 
 exports.surveysPage = function(req, res) {
-        res.render('surveys');
+        if(req.user) {
+                res.redirect('/');
+        } else {
+                res.render('surveys');
+        }
 };
 
 exports.response = function(req, res) {
