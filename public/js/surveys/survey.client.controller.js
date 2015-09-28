@@ -71,6 +71,11 @@
                 $scope.removeQuestion = function() {
                         $scope.questions.pop();
                 }
+
+                $http.get('/surveys').then(function(response) {
+                        $scope.surveys = response.data;
+                        console.log($scope.surveys);
+                });
         }
 
         mainApp.controller("SurveyCtrl", ["$scope", "$http", "$window", SurveyCtrl]);

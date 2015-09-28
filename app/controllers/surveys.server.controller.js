@@ -13,6 +13,7 @@ var getErrors = function(error) {
 
 exports.all = function(req, res) {
         Survey.find({})
+                .populate('_owner', 'username')
                 .deepPopulate('answers')
                 .exec(function(error, data) {
                 if(error) {

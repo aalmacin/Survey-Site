@@ -1,1 +1,15 @@
-<p>Surveys</p>
+<h2>Surveys</h2>
+<div class="surveysPage">
+        <table class="table">
+                <tr>
+                        <th>Description</th>
+                        <th>Expiration Date</th>
+                        <th>Submitted by</th>
+                </tr>
+                <tr ng-repeat="survey in surveys">
+                        <td>{{ survey.description }}</td>
+                        <td>{{ survey.expirationDate }}</td>
+                        <td>{{ survey._owner.username }}</td>
+                </tr>
+        </table>
+</div>

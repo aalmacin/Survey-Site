@@ -53,13 +53,19 @@ var SurveySchema = new mongoose.Schema({
         }]
 });
 
+SurveySchema.virtual('expirationDate').get(function() {
+        return this.expiration.toLocaleString();
+});
+
 SurveySchema.plugin(deepPopulate, {
         rewrite: {
-                user: '_user',
+                user: '_owner',
                 _questions: '_questions',
                 answers: '_questions._answers'
         }
 });
+
+SurveySchema.set('toJSON', {getters:true, virtuals:true});
 
 mongoose.model('Survey', SurveySchema);
 mongoose.model('Question', QuestionSchema);
