@@ -107,7 +107,7 @@
                         });
                 }
 
-                if ($("#respondPage").length > 0) {
+                if ($("#respondPage").length > 0 || $("#reportPage").length > 0) {
                         $http.get('/surveys/' + $routeParams.id + '/response').then(function(response) {
                                 $scope.survey = response.data;
                         });

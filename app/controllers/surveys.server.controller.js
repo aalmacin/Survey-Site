@@ -156,28 +156,36 @@ exports.create = function(req, res) {
 }
 
 exports.update = function(req, res) {
-        var callback = function(error, data) {
-                if(error) {
-                        // Output the error messages
-                        res.json({"messages" : getErrors(error)});
-                } else {
-                        // Return the user data. Only the id, email, and username is shown
-                        res.json({
-                                "messages" : "Successfully updated survey"
-                        });
-                }
-        };
+        var errorMessages = new Array();
+        // If user does not exists, send this error message.
+        if(!req.user || !req.user[0]) {
+                errorMessages.push("Need to login first");
+        }
 
-        switch(req.params.model) {
-                case 'survey':
-                        Survey.findByIdAndUpdate(req.params.id, { $set: req.body }, callback);
-                        break;
-                case 'question':
-                        Question.findByIdAndUpdate(req.params.id, { $set: req.body }, callback);
-                        break;
-                case 'answer':
-                        Answer.findByIdAndUpdate(req.params.id, { $set: req.body }, callback);
-                        break;
+        if(errorMessages.length === 0) {
+                var callback = function(error, data) {
+                        if(error) {
+                                // Output the error messages
+                                res.json({"messages" : getErrors(error)});
+                        } else {
+                                // Return the user data. Only the id, email, and username is shown
+                                res.json({
+                                        "messages" : "Successfully updated survey"
+                                });
+                        }
+                };
+
+                switch(req.params.model) {
+                        case 'survey':
+                                Survey.findByIdAndUpdate(req.params.id, { $set: req.body }, callback);
+                                break;
+                        case 'question':
+                                Question.findByIdAndUpdate(req.params.id, { $set: req.body }, callback);
+                                break;
+                        case 'answer':
+                                Answer.findByIdAndUpdate(req.params.id, { $set: req.body }, callback);
+                                break;
+                }
         }
 }
 

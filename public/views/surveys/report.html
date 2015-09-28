@@ -1,2 +1,32 @@
-<p>Sample Survey Read Report</p>
+<h2>Survey Statistics</h2>
+<hr>
+<div id="reportPage">
+        <h3>{{ survey.description }}</h3>
+
+        <div ng-repeat="question in survey._questions">
+                <table class="table table-striped">
+                        <tr>
+                                <td>{{ question.text }}</td>
+                        </tr>
+                        <tr>
+                        <td>
+                                <table class="table">
+                                        <thead>
+                                                <th>Answer</th>
+                                                <th>Votes</th>
+                                        </thead>
+                                        <tbody>
+                                                <tr ng-repeat="answer in question._answers">
+                                                        <td>{{ answer.text }}</td>
+                                                        <td>{{ answer.responses.length }}</td>
+                                                </tr>
+                                        </tbody>
+                                </table>
+                        </td>
+                        </tr>
+                </table>
+                <hr>
+        </div>
+</div>
+
 
