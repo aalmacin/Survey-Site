@@ -20,6 +20,7 @@ var AnswerSchema = new mongoose.Schema({
 var QuestionSchema = new mongoose.Schema({
         text: {
                 type: String,
+                trim: true,
                 required: "Question text is required"
         },
         _answers: [{
@@ -35,6 +36,7 @@ var QuestionSchema = new mongoose.Schema({
 var SurveySchema = new mongoose.Schema({
         description: {
                 required: "A survey description must be added",
+                trim: true,
                 type: String
         },
         activation: {
