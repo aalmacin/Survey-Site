@@ -1,6 +1,9 @@
 <h2>Survey Create</h2>
 <div class="surveyCreatePage">
         <form name="surveyData" ng-submit="createSurvey()" role="form">
+                <div ng-messages='survey.description.$error' class="errors" role="alert">
+                        <p ng-message="Description must be added."></p>
+                </div>
                 <div role="alert" class='errors'>
                         <p ng-repeat="error in errors">{{ error }}</p>
                 </div>
@@ -14,6 +17,7 @@
                                                 id="description"
                                                 name="description"
                                                 class="form-control"
+                                                required="Survey Description must be added"
                                                 ng-model="survey.description"
                                                 placeholder="Description">
                                 </div>

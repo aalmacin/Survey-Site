@@ -7,6 +7,7 @@ var deepPopulate = require('mongoose-deep-populate')(mongoose);
 var AnswerSchema = new mongoose.Schema({
         text: {
                 type: String,
+                trim: true,
                 required: "Answer text is required"
         },
         _question: {
@@ -33,6 +34,7 @@ var QuestionSchema = new mongoose.Schema({
 
 var SurveySchema = new mongoose.Schema({
         description: {
+                required: "A survey description must be added",
                 type: String
         },
         activation: {
