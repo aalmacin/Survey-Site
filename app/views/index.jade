@@ -1,28 +1,46 @@
-doctype html(lang='en', ng-app='mainApp')
+doctype html(lang='en')
 head
-		meta(http-equiv='content-type', content='text/html; charset=UTF-8')
-		meta(charset='utf-8')
-		meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
-		script(data-require='angular.js@*', data-semver='1.4.0-beta.4', src='https://code.angularjs.org/1.4.0-beta.4/angular.js')
-		script(data-require='angular-route@*', data-semver='1.4.0-beta.4', src='https://code.angularjs.org/1.4.0-beta.4/angular-route.js')
-		script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js')
-		script(src='http://code.jquery.com/jquery-1.11.3.min.js')
-		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css')
-		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css')
-		script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')
-		title Home | Survey Site | Ace Digital
-	body
-		.container
-			.row
-				#leftCol.col-md-3
-					.well
-						h1 Home
-						ul#sidebar.nav.nav-stacked
-							li
-								a(href='/#/') Home
-							li
-								a(href='/#/surveys') Surveys
-							li
-								a(href='/logout') Logout
-				.col-md-9
-					div(ng-view='')
+        meta(http-equiv='content-type', content='text/html; charset=UTF-8')
+        meta(charset='utf-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+
+        link(rel='stylesheet', href='./lib/bootstrap/dist/css/bootstrap.min.css')
+        link(rel='stylesheet', href='./lib/bootstrap/dist/css/bootstrap-theme.min.css')
+
+        title Home | Survey Site | Ace Digital
+body(ng-app='mainApp')
+        .container
+                .row
+                        #leftCol.col-md-3
+                                .well
+                                        h1 Home
+                                        ul#sidebar.nav.nav-stacked
+                                                li
+                                                        a(href='/#/') Home
+                                                li
+                                                        a(href='/#/editprofile') Edit Profile
+                                                li
+                                                        a(href='/#/surveys') Surveys
+                                                li
+                                                        a(href='/#/surveys/56085a754875a3c230644b28') Sample Survey Read
+                                                li
+                                                        a(href='/#/surveys/56085a754875a3c230644b28/report') Sample Survey Read Report
+                                                li
+                                                        a(href='/#/newSurvey') Create Survey
+                                                li
+                                                        a(href='/#/surveys/56085a754875a3c230644b28/edit') Edit Survey
+                                                li
+                                                        a(href='/logout') Logout
+                        .col-md-9
+                                div(ng-view='')
+
+        script(type="text/javascript", src="./lib/angular/angular.min.js")
+        script(type="text/javascript", src="./lib/angular-route/angular-route.min.js")
+        script(type="text/javascript", src="./lib/angular-messages/angular-messages.min.js")
+        script(type="text/javascript", src="./lib/jquery/dist/jquery.min.js")
+        script(type="text/javascript", src="./lib/jquery/dist/jquery.min.js")
+        script(type="text/javascript", src="./lib/bootstrap/dist/js/bootstrap.min.js")
+
+        script(type="text/javascript", src="./js/index.client.controller.js")
+        script(type="text/javascript", src="./js/users/user.client.controller.js")
+        script(type="text/javascript", src="./js/surveys/survey.client.controller.js")

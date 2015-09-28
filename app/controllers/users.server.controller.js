@@ -80,8 +80,6 @@ exports.registerPage = function(req, res) {
 };
 
 exports.loginPage = function(req, res) {
-        console.log('users.ctrl line 115');
-        console.log(req.user);
         if (!req.user) {
                 res.render('login');
         } else {

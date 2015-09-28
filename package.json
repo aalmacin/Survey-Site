@@ -29,6 +29,7 @@
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.14.0",
+    "bower": "^1.5.3",
     "express": "^4.13.3",
     "express-session": "^1.11.3",
     "jade": "^1.11.0",
