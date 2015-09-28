@@ -207,6 +207,10 @@ exports.delete = function(req, res) {
         });
 }
 
+exports.surveysPage = function(req, res) {
+        res.render('surveys');
+};
+
 exports.response = function(req, res) {
         Survey.findById(req.params.id)
                 .deepPopulate('answers')
@@ -220,11 +224,15 @@ exports.response = function(req, res) {
 }
 
 exports.respond = function(req, res) {
-        Answer.findByIdAndUpdate(req.params.id, {$push: {"responses": Date.now()}}, function(error, data) {
 
-                if(error)
-                        res.json({"messages" : getErrors(error)});
-                else
-                        res.json(data);
-        });
+        for (var k in req.body){
+                Answer.findByIdAndUpdate(req.body[k], {$push: {"responses": Date.now()}}, function(error, data) {
+
+                        if(error)
+                                console.log({"messages" : getErrors(error)});
+                        else
+                                console.log(data);
+                });
+        }
+        res.redirect('/allsurveys#/?msg=Successfully sent a response');
 }

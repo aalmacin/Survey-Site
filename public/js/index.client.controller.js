@@ -10,8 +10,8 @@ var mainApp = angular.module("mainApp", ["ngRoute", "ngMessages"]);
                                 templateUrl: "./views/users/edit.html",
                                 controller: "UserCtrl"
                         } )
-                        .when( "/surveys", {
-                                templateUrl: "./views/surveys/surveys.html",
+                        .when( "/mysurveys", {
+                                templateUrl: "./views/surveys/mysurveys.html",
                                 controller: "SurveyCtrl"
                         } )
                         .when( "/surveys/:id", {

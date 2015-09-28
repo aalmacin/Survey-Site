@@ -8,7 +8,7 @@ head
         link(rel='stylesheet', href='./lib/bootstrap/dist/css/bootstrap-theme.min.css')
 
         title Home | Survey Site | Ace Digital
-body(ng-app='mainApp')
+body(ng-app='mainApp', id="allSurveys", ng-controller="SurveyCtrl")
         .container
                 .row
                         #leftCol.col-md-3
@@ -16,21 +16,10 @@ body(ng-app='mainApp')
                                         h1 Home
                                         ul#sidebar.nav.nav-stacked
                                                 li
-                                                        a(href='/#/') Home
-                                                li
-                                                        a(href='/#/editprofile') Edit Profile
-                                                li
-                                                        a(href='/#/mysurveys') My Surveys
-                                                li
-                                                        a(href='/#/surveys/56085a754875a3c230644b28') Sample Survey Read
-                                                li
-                                                        a(href='/#/surveys/56085a754875a3c230644b28/report') Sample Survey Read Report
-                                                li
-                                                        a(href='/#/newSurvey') Create Survey
-                                                li
-                                                        a(href='/#/surveys/56085a754875a3c230644b28/edit') Edit Survey
-                                                li
-                                                        a(href='/logout') Logout
+                                                        a(href='/') Home
+                                                        a(href='/login') Login
+                                                        a(href='/register') Register
+                                                        a(href='/allsurveys#/') All Surveys
                         .col-md-9
                                 div(ng-view='')
 
@@ -41,7 +30,5 @@ body(ng-app='mainApp')
         script(type="text/javascript", src="./lib/jquery/dist/jquery.min.js")
         script(type="text/javascript", src="./lib/bootstrap/dist/js/bootstrap.min.js")
 
-        script(type="text/javascript", src="./js/index.client.controller.js")
-        script(type="text/javascript", src="./js/users/user.client.controller.js")
         script(type="text/javascript", src="./js/surveys/survey.client.controller.js")
 

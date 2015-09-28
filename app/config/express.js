@@ -15,6 +15,9 @@ module.exports = function(mongoose) {
         // Set the app to use body parser and make the files passed to the request (req.body) a json object
         app.use(methodOverride());
         app.use(bodyParser.json());
+        app.use(bodyParser.urlencoded({
+                extended: true
+        }));
 
         app.set('views', './app/views');
         app.set('view engine', 'jade');

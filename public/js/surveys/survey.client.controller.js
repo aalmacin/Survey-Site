@@ -1,7 +1,27 @@
 (function() {
-        var mainApp = angular.module("mainApp");
+        if ($("#allSurveys").length > 0) {
+                var mainApp = angular.module("mainApp", ["ngRoute", "ngMessages"]);
+                mainApp.config(function($routeProvider) {
+                        $routeProvider
+                                .when( "/", {
+                                        templateUrl: "./views/surveys/surveys.html",
+                                        controller: "SurveyCtrl"
+                                } )
+                                .when( "/allsurveys", {
+                                        templateUrl: "./views/surveys/surveys.html",
+                                        controller: "SurveyCtrl"
+                                } )
+                                .when( "/respond/:id", {
+                                        templateUrl: "./views/surveys/read.html",
+                                        controller: "SurveyCtrl"
+                                } )
+                                .otherwise({redirectTo: "/allsurveys"});
+                });
+        } else {
+                var mainApp = angular.module("mainApp");
+        }
 
-        var SurveyCtrl = function ($scope, $http, $window) {
+        var SurveyCtrl = function ($scope, $http, $location, $window, $routeParams) {
                 if ($("#surveyCreatePage").length > 0) {
                         var currentDate = new Date();
                         var date = currentDate.toLocaleDateString();
@@ -74,13 +94,25 @@
                         }
                 }
 
-                if ($("#surveysPage").length > 0) {
+                if ($("#allSurveys").length > 0) {
+                        $scope.message = $location.search().msg;
                         $http.get('/surveys').then(function(response) {
                                 $scope.surveys = response.data;
-                                console.log($scope.surveys);
+                        });
+                }
+
+                if ($("#mySurveysPage").length > 0) {
+                        $http.get('/surveys').then(function(response) {
+                                $scope.surveys = response.data;
+                        });
+                }
+
+                if ($("#respondPage").length > 0) {
+                        $http.get('/surveys/' + $routeParams.id + '/response').then(function(response) {
+                                $scope.survey = response.data;
                         });
                 }
         }
 
-        mainApp.controller("SurveyCtrl", ["$scope", "$http", "$window", SurveyCtrl]);
+        mainApp.controller("SurveyCtrl", ["$scope", "$http", "$location", "$window", "$routeParams", SurveyCtrl]);
 })();

@@ -4,6 +4,8 @@
 var surveys = require('../controllers/surveys.server.controller');
 
 module.exports = function(app) {
+        app.route('/allsurveys')
+                .get(surveys.surveysPage);
         app.route('/surveys')
                 .get(surveys.all)
                 .post(surveys.create);
@@ -13,6 +15,6 @@ module.exports = function(app) {
                 .put(surveys.update);
         app.route('/surveys/:id/response')
                 .get(surveys.response);
-        app.route('/surveys/:id/respond')
+        app.route('/surveys/respond')
                 .post(surveys.respond);
 }

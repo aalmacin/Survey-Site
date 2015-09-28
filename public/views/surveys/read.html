@@ -1,2 +1,22 @@
-<p>Sample Survey Read</p>
+<h2>Respond to Survey</h2>
+<hr>
+<div id="respondPage">
+        <h3>{{ survey.description }}</h3>
+
+        <form name="respond" action="/surveys/respond" method="POST" role="form">
+                <div ng-repeat="question in survey._questions">
+                                <div>
+                                        <h4>{{ question.text }}</h4>
+                                </div>
+                                <div ng-repeat="answer in question._answers">
+                                        <input type="radio" id="{{ answer._id }}" name="{{ question._id }}" value="{{ answer._id }}">
+                                        <label for="{{ answer._id }}" name="{{ question._id }}">{{ answer.text }}</label>
+                                </div>
+                                <hr>
+                </div>
+                <div>
+                        <input type="submit" value="Submit Response">
+                </div>
+        </form>
+</div>
 
