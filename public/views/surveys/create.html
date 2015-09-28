@@ -1,1 +1,57 @@
-<p>Survey Create</p>
+<h2>Survey Create</h2>
+<div>
+        <form name="surveyData" ng-submit="createSurvey()" role="form">
+                <div role="alert" class='errors'>
+                        <span ng-repeat="error in serverErrors">{{ error }}</p>
+                </div>
+
+                <div role="success" class='success'>
+                        <span ng-repeat="msg in serverMsgs">{{ msg }}</p>
+                </div>
+
+                <div class="questions"></div>
+                <fieldset ng-repeat="question in questions">
+                        <div class="form-group">
+                                <label for="question">Question {{$index + 1}} : <span ng-bind="questions[question.id].question"></span></label>
+                                <input type="text"
+                                        id="question{{question.id}}"
+                                        name="question{{question.id}}"
+                                        class="form-control"
+                                        ng-model="questions[question.id].question"
+                                        placeholder="Add Question">
+                                <h3 ng-bind="questions[question.id].question"></h3>
+                                <h3 ng-show="question.answers.length > 0">Answers</h3>
+                                <div class="col-md-9 col-xs-offset-1">
+                                        <fieldset ng-repeat="answer in question.answers">
+                                                <div class="form-group">
+                                                        <label for="answer">Answer {{$index + 1}}</label>
+                                                        <input type="text"
+                                                                id="answer{{answer.id}}"
+                                                                name="answer{{answer.id}}"
+                                                                ng-model="questions[question.id].answers[answer.id].answer"
+                                                                class="form-control"
+                                                                placeholder="Add Answer">
+                                                </div>
+                                        </fieldset>
+                                        <div class="buttons">
+                                                <a class="btn btn-default" ng-click="addAnswers(question.id)">Add Answer</a>
+                                                <a class="btn btn-default" ng-show="question.answers.length > 0" ng-click="removeAnswers(question.id)">Remove Answer</a>
+                                                <hr>
+                                        </div>
+                                </div>
+                        </div>
+                </fieldset>
+                <div class="buttons">
+                        <a class="btn btn-default" ng-click="addQuestion()">Add Question</a>
+                        <a class="btn btn-default" ng-show="questions.length > 0" ng-click="removeQuestion()">Remove Question</a>
+                </div>
+
+                <div>
+                        <br>
+                        <input class="btn btn-primary form-control"
+                                type="submit"
+                                id="submit"
+                                value="Add Survey" />
+                </div>
+        </form>
+</div>
