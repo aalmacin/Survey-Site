@@ -143,6 +143,7 @@
                                                         answers.push({
                                                                 "id" : j,
                                                                 "_id" : answer._id,
+                                                                "responses" : answer.responses,
                                                                 "text" : answer.text
                                                         });
                                                 }

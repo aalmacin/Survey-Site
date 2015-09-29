@@ -76,6 +76,29 @@ exports.create = function(req, res) {
 }
 
 exports.update = function(req, res) {
+        var jsonData = req.body;
+
+        var allErrors = checkQuestionAndAnswer(jsonData.questions, new Array());
+
+        if(!(req.user && req.user[0])) {
+                allErrors.push("You need to login first");
+        }
+
+        if(allErrors.length > 0) {
+                res.json({"success" : false, "errors" : allErrors});
+        } else {
+                var surveyData = req.body.survey;
+                surveyData.questions = jsonData.questions;
+                surveyData.user = req.user[0]._id;
+                Survey.findByIdAndUpdate(surveyData._id, {$set: surveyData}, function(error, data) {
+                        if(error) {
+                                allErrors = getErrors(error, allErrors);
+                                res.json({"success" : false, "errors" : allErrors});
+                        } else {
+                                res.json({"success" : true});
+                        }
+                });
+        }
 }
 
 exports.delete = function(req, res) {
