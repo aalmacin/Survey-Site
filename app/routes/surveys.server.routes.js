@@ -10,11 +10,10 @@ module.exports = function(app) {
                 .get(surveys.all)
                 .post(surveys.create);
         app.route('/surveys/:id')
+                .put(surveys.update)
                 .delete(surveys.delete);
         app.route('/mysurveys')
                 .get(surveys.mysurveys);
-        app.route('/surveys/:model/:id')
-                .put(surveys.update);
         app.route('/surveys/:id/response')
                 .get(surveys.response);
         app.route('/surveys/respond')

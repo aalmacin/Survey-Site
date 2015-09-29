@@ -3,7 +3,7 @@
 <div id="reportPage">
         <h3>{{ survey.description }}</h3>
 
-        <div ng-repeat="question in survey._questions">
+        <div ng-repeat="question in survey.questions">
                 <table class="table table-striped">
                         <tr>
                                 <td>{{ question.text }}</td>
@@ -16,7 +16,7 @@
                                                 <th>Votes</th>
                                         </thead>
                                         <tbody>
-                                                <tr ng-repeat="answer in question._answers">
+                                                <tr ng-repeat="answer in question.answers">
                                                         <td>{{ answer.text }}</td>
                                                         <td>{{ answer.responses.length }}</td>
                                                 </tr>

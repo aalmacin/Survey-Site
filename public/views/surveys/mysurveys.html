@@ -13,7 +13,7 @@
                 <tr ng-repeat="survey in surveys">
                         <td>{{ survey.description }}</td>
                         <td>{{ survey.expirationDate }}</td>
-                        <td>{{ survey._owner.username }}</td>
+                        <td>{{ survey.user.username }}</td>
                         <td><a href="/#/surveys/{{ survey._id }}/report"><button class="btn btn-default">View</button></a>
                         <a href="/#/surveys/{{ survey._id }}"><button class="btn btn-default">Respond</button></a>
                 </tr>

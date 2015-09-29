@@ -23,47 +23,41 @@
 
         var SurveyCtrl = function ($scope, $http, $location, $window, $routeParams) {
                 $scope.message = $location.search().msg;
-                if ($("#surveyCreatePage").length > 0) {
-                        var currentDate = new Date();
-                        var date = currentDate.toLocaleDateString();
-                        var time = currentDate.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'})
-                        currentDate = new Date(
+
+                var mySurvey = function() {
+                        $http.get('/mysurveys').then(function(response) {
+                                $scope.surveys = response.data;
+                        });
+                }
+
+                var responseData = function() {
+                        $http.get('/surveys/' + $routeParams.id + '/response').then(function(response) {
+                                $scope.survey = response.data;
+                        });
+                }
+
+                var allSurveys = function() {
+                        $http.get('/surveys').then(function(response) {
+                                $scope.surveys = response.data;
+                        });
+                }
+
+                var surveyInit = function() {
+                        $scope.currentDate = new Date();
+                        var date = $scope.currentDate.toLocaleDateString();
+                        var time = $scope.currentDate.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'})
+                        $scope.currentDate = new Date(
                                 date + "," + time
                         );
                         $scope.survey = {
-                                "activation": currentDate,
-                                "expiration": currentDate
+                                "activation": $scope.currentDate,
+                                "expiration": $scope.currentDate
                         };
+
                         $scope.questions = [];
                         $scope.errors = new Array();
 
-                        $scope.createSurvey = function() {
-                                $http.post('/surveys', {
-                                        survey: $scope.survey,
-                                        questions: $scope.questions
-                                })
-                                .then(function(response) {
-                                        $scope.errors = new Array();
-                                        $scope.successMsg = null
-                                        console.log(response);
-                                        if(response.data.success) {
-                                                $scope.successMsg = "Successfully created survey.";
-                                                $scope.survey = {
-                                                        "activation": currentDate,
-                                                        "expiration": currentDate
-                                                };
-                                                $scope.questions = [];
-                                        } else {
-                                                $scope.errors = response.data.messages;
-                                        }
-
-                                }, function(response){
-                                        console.log('Error');
-                                        console.log(response);
-                                });
-                        }
-
-
+                        // All of the functions used by both edit and create pages
                         $scope.addAnswers = function(id) {
                                 var c=0, question = null;
                                 while( question === null && c < $scope.questions.length) {
@@ -96,22 +90,110 @@
                         }
                 }
 
-                if ($("#allSurveys").length > 0) {
-                        $http.get('/surveys').then(function(response) {
-                                $scope.surveys = response.data;
+                var analyzeResults = function(data) {
+                        $scope.errors = new Array();
+                        $scope.successMsg = null
+                        if(data.success) {
+                                $scope.successMsg = "Successfully created survey.";
+                                $scope.survey = {
+                                        "activation": $scope.currentDate,
+                                        "expiration": $scope.currentDate
+                                };
+                                $scope.questions = [];
+                        } else {
+                                $scope.errors = data.errors;
+                        }
+                }
+
+
+                // Create
+                var setupCreate = function() {
+                        $scope.createSurvey = function() {
+                                $http.post('/surveys', {
+                                        survey: $scope.survey,
+                                        questions: $scope.questions
+                                })
+                                .then(function(response) {
+                                        analyzeResults(response.data);
+                                }, function(response){
+                                        console.log(response);
+                                });
+                        }
+                }
+
+                // Edit
+                var setupEdit = function() {
+                        $http.get('/surveys/' + $routeParams.id + '/response').then(function(response) {
+                                var surveyData = response.data;
+                                if(surveyData && surveyData._id) {
+                                        $scope.survey = {};
+                                        $scope.survey._id = surveyData._id;
+                                        $scope.survey.description = surveyData.description;
+                                        $scope.survey.activation = new Date(surveyData.activation);
+                                        $scope.survey.expiration = new Date(surveyData.expiration);
+
+                                        $scope.questions = new Array();
+
+                                        for(var i = 0; i < surveyData.questions.length; i++) {
+                                                var question = surveyData.questions[i];
+
+                                                var answers = new Array();
+                                                for(var j=0; j < question.answers.length; j++) {
+                                                        var answer = question.answers[j];
+                                                        answers.push({
+                                                                "id" : j,
+                                                                "_id" : answer._id,
+                                                                "text" : answer.text
+                                                        });
+                                                }
+
+                                                $scope.questions.push({
+                                                        "id" : i,
+                                                        "_id" : question._id,
+                                                        "text" : question.text,
+                                                        "answers" : answers
+                                                });
+                                        }
+                                }
                         });
+
+                        $scope.editSurvey = function() {
+                                $http.put('/surveys/'+$routeParams.id, {
+                                        survey: $scope.survey,
+                                        questions: $scope.questions
+                                })
+                                .then(function(response) {
+                                        analyzeResults(response.data);
+
+                                }, function(response){
+                                        console.log(response);
+                                });
+                        }
+
+                }
+
+                if ($("#surveyCreatePage").length > 0) {
+                        setupCreate();
+                }
+
+                if ($("#surveyEditPage").length > 0) {
+                        setupEdit();
+                }
+
+                if($("#surveyEditPage").length > 0 || $("#surveyCreatePage").length > 0) {
+                        surveyInit();
+                }
+
+                if ($("#allSurveys").length > 0) {
+                        allSurveys();
                 }
 
                 if ($("#mySurveysPage").length > 0) {
-                        $http.get('/mysurveys').then(function(response) {
-                                $scope.surveys = response.data;
-                        });
+                        mySurvey();
                 }
 
                 if ($("#respondPage").length > 0 || $("#reportPage").length > 0) {
-                        $http.get('/surveys/' + $routeParams.id + '/response').then(function(response) {
-                                $scope.survey = response.data;
-                        });
+                        responseData();
                 }
         }
 

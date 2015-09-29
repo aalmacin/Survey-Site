@@ -1,35 +1,24 @@
 /*
         All the methods used to do crud operations are to be called from here. This is the middle object between the route and it's corresponding model.
 */
-var Survey = require('mongoose').model('Survey'),
-        Question = require('mongoose').model('Question'),
-        Answer = require('mongoose').model('Answer');
+var Survey = require('mongoose').model('Survey');
 
-var getErrors = function(error) {
-        var messages = [];
-        if(error.errors && error.errors.description && error.errors.description.message) {
-                messages.push(error.errors.description.message);
-        }
-        if(error.errors.length > 0) {
-                for(var i = 0; i < error.errors.length; i++) {
-                        messages.push(error.errors[i]);
+var getErrors = function(error, allErrors) {
+        if(error.errors) {
+                var errors = error.errors;
+                if(errors.description) {
+                        allErrors.push(errors.description.message);
+                }
+                if(errors.activation) {
+                        allErrors.push(errors.activation.message);
                 }
         }
-
-        if(messages.length === 0) messages.push("An error has occured");
-        return messages;
+        return allErrors;
 }
 
 exports.all = function(req, res) {
-        Survey.find({})
-                .populate('_owner', 'username')
-                .deepPopulate('answers')
-                .exec(function(error, data) {
-                if(error) {
-                        res.json(error);
-                } else {
-                        res.json(data);
-                }
+        Survey.find({}).populate('user', 'username').exec(function(err, data) {
+                res.json(data);
         });
 }
 
@@ -39,14 +28,14 @@ var checkQuestionAndAnswer = function(questions, errorMessages) {
         } else {
                 for(var i = 0; i < questions.length; i++) {
                         var question = questions[i];
-                        if(question.text.length === 0) {
+                        if(!(question.text) || question.text.length === 0) {
                                 errorMessages.push("Question text must be added");
                         } else if(question.answers.length < 2) {
                                 errorMessages.push("Need to add at least two answers for: " + questions[i].text);
                         } else if(question.answers.length !== 0) {
                                 for(var j = 0; j < question.answers.length; j++) {
                                         var answer = question.answers[j];
-                                        if(answer.text.length === 0) {
+                                        if(!(answer.text) || answer.text.length === 0) {
                                                 errorMessages.push("Answer text must be added");
                                         }
                                 }
@@ -59,59 +48,30 @@ var checkQuestionAndAnswer = function(questions, errorMessages) {
 
 exports.create = function(req, res) {
         var jsonData = req.body;
-        // Initialize error messages
-        var errorMessages = checkQuestionAndAnswer(jsonData.questions, new Array());
 
-        // If user does not exists, send this error message.
-        if(!req.user || !req.user[0]) {
-                errorMessages.push("Need to login first");
+        var allErrors = checkQuestionAndAnswer(jsonData.questions, new Array());
+
+        if(!(req.user && req.user[0])) {
+                allErrors.push("You need to login first");
         }
 
-        if(jsonData.survey.activation.length === 0) {
-                errorMessages.push("Activation needed");
-        }
-
-        if(jsonData.survey.expiration.length === 0) {
-                errorMessages.push("Expiration needed");
-        }
-
-        if(jsonData.survey.description.length === 0) {
-                errorMessages.push("Description needed");
-        }
-
-        if (errorMessages.length === 0) {
-
-                var userId = req.user[0]._id;
-                var survey = new Survey({
-                        '_owner' : userId,
-                        'activation' : jsonData.survey.activation,
-                        'expiration' : jsonData.survey.expiration,
-                        'description' : jsonData.survey.description
-                });
-
-                for(var i=0; i < jsonData.questions.length; i++) {
-                        var questionData = jsonData.questions[i];
-                        var question = new Question({
-                                "_survey" : survey._id,
-                                "text" : questionData.text
-                        });
-
-                        for(var j=0; j < questionData.answers.length; j++) {
-                                var answerData = questionData.answers[j];
-                                var answer = new Answer({
-                                        "_question" : question._id,
-                                        "text" : answerData.text
-                                });
-                                question._answers.push(answer);
-                                answer.save();
-                        }
-                        question.save();
-                        survey._questions.push(question);
-                }
-                survey.save();
-                res.json({"success" : true, "messages" : jsonData});
+        if(allErrors.length > 0) {
+                res.json({"success" : false, "errors" : allErrors});
         } else {
-                res.json({"success" : false, "messages" : errorMessages});
+                var surveyData = req.body.survey;
+
+                var survey = new Survey(surveyData);
+                survey.questions = jsonData.questions;
+                survey.user = req.user[0]._id;
+                console.log(survey);
+                survey.save(function(error) {
+                        if(error) {
+                                allErrors = getErrors(error, allErrors);
+                                res.json({"success" : false, "errors" : allErrors});
+                        } else {
+                                res.json({"success" : true});
+                        }
+                });
         }
 }
 
@@ -119,29 +79,42 @@ exports.update = function(req, res) {
 }
 
 exports.delete = function(req, res) {
+}
+
+exports.response = function(req, res) {
         Survey.findById(req.params.id)
-        .populate('answers').exec(function(error, data) {
-                for(var i = 0; i < data._questions.length; i++) {
-                        Answer.remove({"_question" : data._questions[i]}, function(error) {});
-                }
-                Question.remove({"_survey" : data._id}, function(error) {});
-                Survey.findByIdAndRemove(data._id, function(error) {});
-                if(error) {
-                        // Output the error messages
-                        res.json({"messages" : getErrors(error)});
-                } else {
-                        if(data) {
-                                // Return the survey data. Only the id, email, and surveyname is shown
-                                res.json({
-                                        "message": "Survey has been deleted"
-                                });
+                .exec(function(error, data) {
+                        if(error) {
+                                res.json(error);
                         } else {
-                                res.json({
-                                        "message": "Can't find survey to be deleted"
-                                });
+                                res.json(data);
                         }
-                }
-        });
+                });
+}
+
+exports.respond = function(req, res) {
+        for (var key in req.body){
+                var val = req.body[key];
+                Survey.find({"questions.answers._id" : val}).exec(function(error, data) {
+                        for(var i = 0 ; i < data.length ; i++) {
+                                var survey = data[i];
+                                var subdoc = survey.questions.id(key).answers.id(val);
+                                subdoc.responses.push(Date.now());
+                                survey.save();
+                        }
+                });
+        }
+        res.redirect('/allsurveys#/?msg=Successfully sent a response');
+}
+
+exports.mysurveys = function(req, res) {
+        if(req.user && req.user[0]) {
+                Survey.find({'user': req.user[0]._id}).populate('user', 'username').exec(function(err, data) {
+                        res.json(data);
+                });
+        } else {
+                res.redirect('/login');
+        }
 }
 
 exports.surveysPage = function(req, res) {
@@ -151,46 +124,3 @@ exports.surveysPage = function(req, res) {
                 res.render('surveys');
         }
 };
-
-exports.response = function(req, res) {
-        Survey.findById(req.params.id)
-                .deepPopulate('answers')
-                .exec(function(error, data) {
-                if(error) {
-                        res.json(error);
-                } else {
-                        res.json(data);
-                }
-        });
-}
-
-exports.respond = function(req, res) {
-
-        for (var k in req.body){
-                Answer.findByIdAndUpdate(req.body[k], {$push: {"responses": Date.now()}}, function(error, data) {
-
-                        if(error)
-                                console.log({"messages" : getErrors(error)});
-                        else
-                                console.log(data);
-                });
-        }
-        res.redirect('/allsurveys#/?msg=Successfully sent a response');
-}
-
-exports.mysurveys = function(req, res) {
-        if(req.user && req.user[0]) {
-                Survey.find({'_owner' : req.user[0]._id})
-                        .populate('_owner', 'username')
-                        .deepPopulate('answers')
-                        .exec(function(error, data) {
-                        if(error) {
-                                res.json(error);
-                        } else {
-                                res.json(data);
-                        }
-                });
-        } else {
-                res.json({"messages" : "Need to login"});
-        }
-}

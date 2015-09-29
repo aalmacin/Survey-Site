@@ -10,10 +10,6 @@ var AnswerSchema = new mongoose.Schema({
                 trim: true,
                 required: "Answer text is required"
         },
-        _question: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Survey'
-        },
         responses: [Date]
 });
 
@@ -23,14 +19,7 @@ var QuestionSchema = new mongoose.Schema({
                 trim: true,
                 required: "Question text is required"
         },
-        _answers: [{
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Answer'
-        }],
-        _survey: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Survey'
-        }
+        answers: [AnswerSchema]
 });
 
 var SurveySchema = new mongoose.Schema({
@@ -47,14 +36,11 @@ var SurveySchema = new mongoose.Schema({
                 type: Date,
                 required: "You need to set an expiration date"
         },
-        _owner: {
+        user: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'User'
         },
-        _questions: [{
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Question'
-        }]
+        questions: [QuestionSchema]
 });
 
 SurveySchema.virtual('expirationDate').get(function() {
@@ -63,14 +49,9 @@ SurveySchema.virtual('expirationDate').get(function() {
 
 SurveySchema.plugin(deepPopulate, {
         rewrite: {
-                user: '_owner',
-                _questions: '_questions',
-                answers: '_questions._answers'
         }
 });
 
 SurveySchema.set('toJSON', {getters:true, virtuals:true});
 
 mongoose.model('Survey', SurveySchema);
-mongoose.model('Question', QuestionSchema);
-mongoose.model('Answer', AnswerSchema);

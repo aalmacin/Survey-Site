@@ -4,11 +4,13 @@
                 <div ng-show="survey.description.$error" ng-messages='survey.description.$error' class="errors alert alert-danger" role="alert">
                         <p ng-message="Description must be added."></p>
                 </div>
+
                 <div ng-show="errors.length > 0" role="alert" class='errors alert alert-danger'>
                         <p ng-repeat="error in errors">{{ error }}</p>
                 </div>
 
                 <div class="alert alert-success" ng-show="successMsg">{{ successMsg }}</div>
+
                 <div class="survey">
                         <fieldset>
                                 <div class="form-group">
