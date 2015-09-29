@@ -33,22 +33,93 @@ exports.all = function(req, res) {
         });
 }
 
-exports.update = function(req, res) {
-        User.findByIdAndUpdate(req.params.id, {
-                $set: req.body
-        }, function(error, data) {
-                if(error) {
-                        // Output the error messages
-                        res.json({"messages" : getErrors(error)});
-                } else {
-                        // Return the user data. Only the id, email, and username is shown
-                        res.json({
-                                "username": data.username,
-                                "email": data.email,
-                                "id": data._id
+exports.loggedin = function(req, res) {
+        // Find all users
+        var jsonData = req.body;
+
+        var allErrors = new Array();
+
+        if(!(req.user && req.user[0])) {
+                allErrors.push("You need to login first");
+        }
+
+        if(allErrors.length > 0) {
+                res.json({"success" : false, "errors" : allErrors});
+        } else {
+                User.find({"_id" : req.user[0]._id}, '-password -__v', function(error, data) {
+                        // Run the next middleware with the error message as the argument if an error is present. Otherwise, display the data.
+                        if(error) {
+                                res.json(error);
+                        } else {
+                                res.json(data);
+                        }
+                });
+        }
+}
+
+exports.updatePassword = function(req, res) {
+        // Find all users
+        var jsonData = req.body;
+
+        var allErrors = new Array();
+        if(!(req.user && req.user[0])) {
+                allErrors.push("You need to login first");
+        } else if(req.params.id != req.user[0]._id) {
+                allErrors.push("You don't have access to this data");
+        }
+
+        if(allErrors.length > 0) {
+                res.json({"success" : false, "errors" : allErrors});
+        } else {
+                User.findOne({"_id" : req.params.id}).exec( function(error, data) {
+                        data.password = req.body.password;
+                        data.save(function(error, data) {
+                                if(error) {
+                                        // Output the error messages
+                                        res.json({"messages" : getErrors(error)});
+                                } else {
+                                        // Return the user data. Only the id, email, and username is shown
+                                        res.json({
+                                                "success": true,
+                                                "username": data.username,
+                                                "email": data.email,
+                                                "id": data._id
+                                        });
+                                }
                         });
-                }
-        });
+                });
+        }
+}
+
+exports.update = function(req, res) {
+        // Find all users
+        var jsonData = req.body;
+
+        var allErrors = new Array();
+        if(!(req.user && req.user[0])) {
+                allErrors.push("You need to login first");
+        } else if(req.params.id != req.user[0]._id) {
+                allErrors.push("You don't have access to this data");
+        }
+
+        if(allErrors.length > 0) {
+                res.json({"success" : false, "errors" : allErrors});
+        } else {
+                User.findByIdAndUpdate(req.params.id, {$set: req.body.user}, function(error, data) {
+                        if(error) {
+                                // Output the error messages
+                                res.json({"messages" : getErrors(error)});
+                        } else {
+                                // Return the user data. Only the id, email, and username is shown
+                                res.json({
+                                        "success": true,
+                                        "username": data.username,
+                                        "email": data.email,
+                                        "id": data._id
+                                });
+                        }
+                });
+        }
 }
 
 exports.delete = function(req, res) {

@@ -6,8 +6,12 @@ var users = require('../controllers/users.server.controller'),
 
 module.exports = function(app) {
         app.route('/users')
-                .get(users.all)
+        //        .get(users.all)
                 .post(users.register);
+        app.route('/loggedin')
+                .get(users.loggedin);
+        app.route('/users/:id/password')
+                .put(users.updatePassword);
         app.route('/users/:id')
                 .put(users.update)
                 .delete(users.delete);
