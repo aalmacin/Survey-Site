@@ -45,15 +45,16 @@
                                 .then(function(response) {
                                         $scope.errors = new Array();
                                         $scope.successMsg = null
-                                        if(response.data.error) {
-                                                $scope.errors = response.data.errors;
-                                        } else {
+                                        console.log(response);
+                                        if(response.data.success) {
                                                 $scope.successMsg = "Successfully created survey.";
                                                 $scope.survey = {
                                                         "activation": currentDate,
                                                         "expiration": currentDate
                                                 };
                                                 $scope.questions = [];
+                                        } else {
+                                                $scope.errors = response.data.messages;
                                         }
 
                                 }, function(response){

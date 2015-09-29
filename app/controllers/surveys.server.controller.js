@@ -33,22 +33,6 @@ exports.all = function(req, res) {
         });
 }
 
-var createQuestions = function(id, data) {
-        var question = new Question(data);
-        question.save(function(error) {
-                if(error) question = getErrors(error);
-        });
-        return question;
-}
-
-var createAnswers = function(id, data) {
-        var answer = new Answer(data);
-        answer.save(function(error) {
-                if(error) answer = getErrors(error);
-        });
-        return answer;
-}
-
 var checkQuestionAndAnswer = function(questions, errorMessages) {
         if(questions.length === 0) {
                 errorMessages.push("Need to add at least one question.");
@@ -73,120 +57,65 @@ var checkQuestionAndAnswer = function(questions, errorMessages) {
         return errorMessages;
 }
 
-var getErrorArray = function(errorMessages, errors) {
-        for(var i = 0; i < errors.length ; i++) {
-                errorMessages.push(errors[i]);
-        }
-        return errorMessages;
-}
-
-// Using the Survey model, create a new survey using the json data passed (using body-parser) from the form.
 exports.create = function(req, res) {
+        var jsonData = req.body;
         // Initialize error messages
-        var errorMessages = checkQuestionAndAnswer(req.body.questions, new Array());
+        var errorMessages = checkQuestionAndAnswer(jsonData.questions, new Array());
 
         // If user does not exists, send this error message.
         if(!req.user || !req.user[0]) {
                 errorMessages.push("Need to login first");
         }
 
-        if(errorMessages.length === 0) {
-                var surveyData = req.body;
-                surveyData.survey._owner = req.user[0]._id;
+        if(jsonData.survey.activation.length === 0) {
+                errorMessages.push("Activation needed");
+        }
 
-                var survey = new Survey(surveyData.survey);
-                survey.save(function(error) {
-                        if(error) {
-                                errorMessages = getErrorArray(errorMessages, getErrors(error));
-                                res.json({"error" : true, "errors" : errorMessages});
-                        } else {
-                                if (survey._id && surveyData.questions.length > 0) {
-                                        for (var i=0; i < surveyData.questions.length; i++) {
-                                                var questionJSON = surveyData.questions[i];
+        if(jsonData.survey.expiration.length === 0) {
+                errorMessages.push("Expiration needed");
+        }
 
-                                                var question = createQuestions(survey._id, {
-                                                        "text" : questionJSON.text,
-                                                        "_survey" : survey._id
-                                                });
+        if(jsonData.survey.description.length === 0) {
+                errorMessages.push("Description needed");
+        }
 
-                                                if (question._id) {
-                                                        for (var j=0; j < questionJSON.answers.length; j++) {
-                                                                var answerJSON = questionJSON.answers[j];
+        if (errorMessages.length === 0) {
 
-                                                                var answer = createAnswers(question._id, {
-                                                                        "text" : answerJSON.text,
-                                                                        "_question" : question._id
-                                                                });
-
-                                                                if (!question._id) {
-                                                                        errorMessages = getErrorArray(errorMessages, getErrors(answer));
-                                                                        res.json({"error" : true, "errors" : errorMessages});
-                                                                }
-                                                                question._answers.push(answer);
-                                                        }
-                                                        question.save(function(err) {
-                                                                if(err) {
-                                                                        errorMessages = getErrorArray(errorMessages, getErrors(err));
-                                                                        res.json({"error" : true, "errors" : errorMessages});
-                                                                }
-                                                        });
-                                                        survey._questions.push(question);
-                                                } else {
-                                                        errorMessages = getErrorArray(errorMessages, getErrors(question));
-                                                        res.json({"error" : true, "errors" : errorMessages});
-                                                }
-                                        }
-                                        survey.save(function(err) {
-                                                if(err) {
-                                                        errorMessages = getErrorArray(errorMessages, getErrors(err));
-                                                        res.json({"error" : true, "errors" : errorMessages});
-                                                }
-                                        });
-                                }
-
-
-                                if (errorMessages.length === 0) {
-                                        res.json(req.body);
-                                }
-                        }
+                var userId = req.user[0]._id;
+                var survey = new Survey({
+                        '_owner' : userId,
+                        'activation' : jsonData.survey.activation,
+                        'expiration' : jsonData.survey.expiration,
+                        'description' : jsonData.survey.description
                 });
+
+                for(var i=0; i < jsonData.questions.length; i++) {
+                        var questionData = jsonData.questions[i];
+                        var question = new Question({
+                                "_survey" : survey._id,
+                                "text" : questionData.text
+                        });
+
+                        for(var j=0; j < questionData.answers.length; j++) {
+                                var answerData = questionData.answers[j];
+                                var answer = new Answer({
+                                        "_question" : question._id,
+                                        "text" : answerData.text
+                                });
+                                question._answers.push(answer);
+                                answer.save();
+                        }
+                        question.save();
+                        survey._questions.push(question);
+                }
+                survey.save();
+                res.json({"success" : true, "messages" : jsonData});
         } else {
-                res.json({"error" : true, "errors" : errorMessages});
+                res.json({"success" : false, "messages" : errorMessages});
         }
 }
 
 exports.update = function(req, res) {
-        var errorMessages = new Array();
-        // If user does not exists, send this error message.
-        if(!req.user || !req.user[0]) {
-                errorMessages.push("Need to login first");
-        }
-
-        if(errorMessages.length === 0) {
-                var callback = function(error, data) {
-                        if(error) {
-                                // Output the error messages
-                                res.json({"messages" : getErrors(error)});
-                        } else {
-                                // Return the user data. Only the id, email, and username is shown
-                                res.json({
-                                        "messages" : "Successfully updated survey"
-                                });
-                        }
-                };
-
-                switch(req.params.model) {
-                        case 'survey':
-                                Survey.findByIdAndUpdate(req.params.id, { $set: req.body }, callback);
-                                break;
-                        case 'question':
-                                Question.findByIdAndUpdate(req.params.id, { $set: req.body }, callback);
-                                break;
-                        case 'answer':
-                                Answer.findByIdAndUpdate(req.params.id, { $set: req.body }, callback);
-                                break;
-                }
-        }
 }
 
 exports.delete = function(req, res) {
