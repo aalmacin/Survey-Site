@@ -90,15 +90,17 @@
                         }
                 }
 
-                var analyzeResults = function(data) {
+                var analyzeResults = function(data, action) {
                         $scope.errors = new Array();
                         $scope.successMsg = null
                         if(data.success) {
-                                $scope.successMsg = "Successfully created survey.";
-                                $scope.survey = {
-                                        "activation": $scope.currentDate,
-                                        "expiration": $scope.currentDate
-                                };
+                                $scope.successMsg = "Successfully "+action+" survey.";
+                                if(action !== 'Deleted') {
+                                        $scope.survey = {
+                                                "activation": $scope.currentDate,
+                                                "expiration": $scope.currentDate
+                                        };
+                                }
                                 $scope.questions = [];
                         } else {
                                 $scope.errors = data.errors;
@@ -114,7 +116,7 @@
                                         questions: $scope.questions
                                 })
                                 .then(function(response) {
-                                        analyzeResults(response.data);
+                                        analyzeResults(response.data, "Created");
                                 }, function(response){
                                         console.log(response);
                                 });
@@ -164,13 +166,25 @@
                                         questions: $scope.questions
                                 })
                                 .then(function(response) {
-                                        analyzeResults(response.data);
+                                        analyzeResults(response.data, "Updated");
 
                                 }, function(response){
                                         console.log(response);
                                 });
                         }
 
+                }
+
+                var deleteSurveySetup = function() {
+                        $scope.deleteSurvey = function(id) {
+                                $http.delete('/surveys/'+id)
+                                .then(function(response) {
+                                        analyzeResults(response.data, "Deleted");
+                                        mySurvey();
+                                }, function(response){
+                                        console.log(response);
+                                });
+                        }
                 }
 
                 if ($("#surveyCreatePage").length > 0) {
@@ -191,6 +205,7 @@
 
                 if ($("#mySurveysPage").length > 0) {
                         mySurvey();
+                        deleteSurveySetup();
                 }
 
                 if ($("#respondPage").length > 0 || $("#reportPage").length > 0) {

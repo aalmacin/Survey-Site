@@ -63,7 +63,6 @@ exports.create = function(req, res) {
                 var survey = new Survey(surveyData);
                 survey.questions = jsonData.questions;
                 survey.user = req.user[0]._id;
-                console.log(survey);
                 survey.save(function(error) {
                         if(error) {
                                 allErrors = getErrors(error, allErrors);
@@ -102,6 +101,25 @@ exports.update = function(req, res) {
 }
 
 exports.delete = function(req, res) {
+        var allErrors = new Array();;
+        console.log(req.params);
+
+        if(!(req.user && req.user[0])) {
+                allErrors.push("You need to login first");
+        }
+
+        if(allErrors.length > 0) {
+                res.json({"success" : false, "errors" : allErrors});
+        } else {
+                Survey.remove({"_id" : req.params.id, "user" : req.user[0]._id} , function(error, data) {
+                        if(error) {
+                                allErrors = getErrors(error, allErrors);
+                                res.json({"success" : false, "errors" : allErrors});
+                        } else {
+                                res.json({"success" : true});
+                        }
+                });
+        }
 }
 
 exports.response = function(req, res) {
