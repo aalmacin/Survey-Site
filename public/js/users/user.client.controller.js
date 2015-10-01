@@ -13,6 +13,7 @@
                         });
                         $scope.updateInfo = function() {
                                 $scope.errors = [];
+                                $scope.successMsg = '';
                                 $http.put('/users/'+$scope.user._id, {
                                         user: {
                                                 email : $scope.user.email,
@@ -20,7 +21,11 @@
                                         }
                                 })
                                 .then(function(response) {
-                                        console.log(response);
+                                        if(response.data && response.data.success) {
+                                                $scope.successMsg = "Successfully Updated User info";
+                                        } else {
+                                                $scope.errors = response.data.errors;
+                                        }
 
                                 }, function(response){
                                         console.log(response);
@@ -29,20 +34,19 @@
 
                         $scope.updatePassword = function() {
                                 $scope.errors = [];
+                                $scope.successMsg = '';
                                 if($scope.user.password === $scope.user.confirmPassword) {
                                         $http.put('/users/' + $scope.user._id + '/password', {
                                                 password : $scope.user.password
                                         })
                                         .then(function(response) {
-                                                console.log(response);
-                                                $scope.errors = new Array();
-                                                $scope.successMsg = null
-                                                if(response.data.success) {
-                                                        $scope.successMsg = "Successfully Updated user.";
+                                                if(response.data && response.data.success) {
+                                                        $scope.successMsg = "Successfully Updated User password";
+                                                        $scope.user.password = "";
+                                                        $scope.user.confirmPassword = "";
                                                 } else {
-                                                        $scope.errors = response.data.errors;
+                                                        $scope.errors = response.data.messages;
                                                 }
-
                                         }, function(response){
                                                 console.log(response);
                                         });

@@ -76,7 +76,7 @@ exports.updatePassword = function(req, res) {
                         data.save(function(error, data) {
                                 if(error) {
                                         // Output the error messages
-                                        res.json({"messages" : getErrors(error)});
+                                        res.json({success: false, "messages" : getErrors(error)});
                                 } else {
                                         // Return the user data. Only the id, email, and username is shown
                                         res.json({

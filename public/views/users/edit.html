@@ -2,8 +2,9 @@
         <h2>Edit User</h2>
         <hr>
         <div ng-show="errors.length > 0" role="alert" class="errors alert alert-danger">
-                <span ng-repeat="error in errors">{{ error }}</span>
+                <span ng-repeat="error in errors">{{ error }}<br></span>
         </div>
+        <div class="alert alert-success" ng-show="successMsg">{{ successMsg }}</div>
         <h3>Update Info</h3>
         <form name="infoUpdate" ng-submit="updateInfo()" role="form">
                 <div ng-messages="user.username.$error" role="alert" class="errors">
