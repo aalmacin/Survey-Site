@@ -27,6 +27,17 @@
                 </table>
                 <hr>
         </div>
+        <div ng-repeat="question in survey.questions">
+                <div>
+                        <h4>Response to {{ question.text }}</h4>
+                        <div class="answers" ng-repeat="answer in question.answers">
+                                <div class="responses" ng-repeat="response in answer.responses">
+                                        <p>Responded <b>{{ answer.text }}</b> at {{ response }}</p>
+                                </div>
+                        </div>
+                </div>
+                <hr>
+        </div>
 </div>
 
 
