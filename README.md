@@ -48,22 +48,37 @@ Ace Digital's Survey site is a very simple responsive survey site. The main obje
 ___
 ### Wireframes
 ![alt text](wireframes/editProfile.png "A wireframe sample for the site")
+___
 ![alt text](wireframes/login.png "A wireframe sample for the site")
+___
 ![alt text](wireframes/register.png "A wireframe sample for the site")
+___
 ![alt text](wireframes/surveys.png "A wireframe sample for the site")
+___
 ___
 ### Screen Captures
 ![alt text](screenshots/1.png "A screenshot sample of the site")
+___
 ![alt text](screenshots/2.png "A screenshot sample of the site")
+___
 ![alt text](screenshots/3.png "A screenshot sample of the site")
+___
 ![alt text](screenshots/4.png "A screenshot sample of the site")
+___
 ![alt text](screenshots/5.png "A screenshot sample of the site")
+___
 ![alt text](screenshots/6.png "A screenshot sample of the site")
+___
 ![alt text](screenshots/7.png "A screenshot sample of the site")
+___
 ![alt text](screenshots/8.png "A screenshot sample of the site")
+___
 ![alt text](screenshots/9.png "A screenshot sample of the site")
+___
 ![alt text](screenshots/10.png "A screenshot sample of the site")
+___
 ![alt text](screenshots/11.png "A screenshot sample of the site")
+___
 ![alt text](screenshots/12.png "A screenshot sample of the site")
 
 ___
