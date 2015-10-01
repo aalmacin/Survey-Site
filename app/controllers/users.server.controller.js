@@ -3,7 +3,9 @@
 */
 var User = require('mongoose').model('User');
 
+// Get the errors sent back by mongoose and organize these errors into an array of errors. This array will be used by Angular in displaying error messages to the user.
 var getErrors = function(error) {
+        // Show a generic error message
         var messages = ["An error has occured"];
         if(error.errors && error.errors.password && error.errors.password.message) {
                 messages.push(error.errors.password.message);
@@ -21,6 +23,9 @@ var getErrors = function(error) {
         return messages;
 }
 
+/*
+        This RESTful Read method is used to show all users in JSON format
+*/
 exports.all = function(req, res) {
         // Find all users
         User.find({}, '-password -__v', function(error, data) {
@@ -33,12 +38,16 @@ exports.all = function(req, res) {
         });
 }
 
+/*
+        Returns the logged in user data
+*/
 exports.loggedin = function(req, res) {
         // Find all users
         var jsonData = req.body;
 
         var allErrors = new Array();
 
+        // Check if the user is logged in
         if(!(req.user && req.user[0])) {
                 allErrors.push("You need to login first");
         }
@@ -57,13 +66,19 @@ exports.loggedin = function(req, res) {
         }
 }
 
+/*
+        This method is used to update the user's password
+*/
 exports.updatePassword = function(req, res) {
         // Find all users
         var jsonData = req.body;
 
         var allErrors = new Array();
+
+        // Check if the user is logged in
         if(!(req.user && req.user[0])) {
                 allErrors.push("You need to login first");
+        // Find out if the userid sent is the logged in user with the right id. This is to prevent people who uses bash to just send a request using curl
         } else if(req.params.id != req.user[0]._id) {
                 allErrors.push("You don't have access to this data");
         }
@@ -71,6 +86,7 @@ exports.updatePassword = function(req, res) {
         if(allErrors.length > 0) {
                 res.json({"success" : false, "errors" : allErrors});
         } else {
+                // Find the user and update the password
                 User.findOne({"_id" : req.params.id}).exec( function(error, data) {
                         data.password = req.body.password;
                         data.save(function(error, data) {
@@ -91,13 +107,19 @@ exports.updatePassword = function(req, res) {
         }
 }
 
+/*
+        This method is used to update the user's information. Email/username
+*/
 exports.update = function(req, res) {
         // Find all users
         var jsonData = req.body;
 
         var allErrors = new Array();
+
+        // Check if the user is logged in
         if(!(req.user && req.user[0])) {
                 allErrors.push("You need to login first");
+        // Find out if the userid sent is the logged in user with the right id. This is to prevent people who uses bash to just send a request using curl
         } else if(req.params.id != req.user[0]._id) {
                 allErrors.push("You don't have access to this data");
         }
@@ -105,6 +127,7 @@ exports.update = function(req, res) {
         if(allErrors.length > 0) {
                 res.json({"success" : false, "errors" : allErrors});
         } else {
+                // Update the user info
                 User.findByIdAndUpdate(req.params.id, {$set: req.body.user}, function(error, data) {
                         if(error) {
                                 // Output the error messages
@@ -122,26 +145,7 @@ exports.update = function(req, res) {
         }
 }
 
-exports.delete = function(req, res) {
-        User.findByIdAndRemove(req.params.id, function(error, data) {
-                if(error) {
-                        // Output the error messages
-                        res.json({"messages" : getErrors(error)});
-                } else {
-                        if(data) {
-                                // Return the user data. Only the id, email, and username is shown
-                                res.json({
-                                        "message": data.username + " has been deleted"
-                                });
-                        } else {
-                                res.json({
-                                        "message": "Can't find user to be deleted"
-                                });
-                        }
-                }
-        });
-}
-
+// Render registration page. Show the registration view page only if the user is not logged in
 exports.registerPage = function(req, res) {
         if (!req.user) {
                 res.render('register');
@@ -150,6 +154,7 @@ exports.registerPage = function(req, res) {
         }
 };
 
+// Render login page. Show the login view page only if the user is not logged in
 exports.loginPage = function(req, res) {
         if (!req.user) {
                 res.render('login');
@@ -158,6 +163,7 @@ exports.loginPage = function(req, res) {
         }
 };
 
+// Render index page. Force the user to login by going to the login page if the user is not yet logged in
 exports.main = function(req, res) {
         if (!req.user) {
                 res.render('login');
@@ -170,6 +176,7 @@ exports.main = function(req, res) {
 exports.register = function(req, res) {
         var user = new User(req.body);
 
+        // Set provider to local. This will be saved to the database
         user.provider = 'local';
 
         // Save the newly created user record
@@ -179,6 +186,7 @@ exports.register = function(req, res) {
                         // Output the error messages
                         res.json({"status": "error", "messages" : getErrors(error)});
                 } else {
+                        // Login the user immediately after registration
                         req.login(user, function(error) {
                                 if(error) {
                                         res.json({"status": "error", "messages" : getErrors(error)});
@@ -190,7 +198,7 @@ exports.register = function(req, res) {
         });
 }
 
-
+// Logout the user from the site (using passport) and redirect the user to the login page
 exports.logout = function(req, res) {
         req.logout();
         res.redirect('/login');

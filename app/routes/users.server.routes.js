@@ -5,19 +5,26 @@ var users = require('../controllers/users.server.controller'),
         passport = require('passport');
 
 module.exports = function(app) {
+        // Create a new user using register.
         app.route('/users')
+        // Hidden the get method. There is no usage for this method at the moment
         //        .get(users.all)
                 .post(users.register);
+        // Get the logged in user's data
         app.route('/loggedin')
                 .get(users.loggedin);
+        // Update the user's password
         app.route('/users/:id/password')
                 .put(users.updatePassword);
+        // Update the user's info
         app.route('/users/:id')
-                .put(users.update)
-                .delete(users.delete);
+                .put(users.update);
+        // Render the main view
         app.get('/', users.main);
+        // Render the login view
         app.get('/login', users.loginPage);
 
+        // login the user. This is a passport function
         app.post('/login', function(req, res, next) {
                 passport.authenticate('local', function(error, user, info) {
                         if (error) { return next(error); }
@@ -34,8 +41,10 @@ module.exports = function(app) {
                 })(req, res, next);
         });
 
+        // Render the register page or register a new user
         app.route('/register')
                 .get(users.registerPage)
                 .post(users.register);
+        // logout the current logged in user
         app.get('/logout', users.logout);
 }

@@ -187,13 +187,15 @@
 
                 var deleteSurveySetup = function() {
                         $scope.deleteSurvey = function(id) {
-                                $http.delete('/surveys/'+id)
-                                .then(function(response) {
-                                        analyzeResults(response.data, "Deleted");
-                                        mySurvey();
-                                }, function(response){
-                                        console.log(response);
-                                });
+                                if(confirm("Are you sure you want to delete this survey?")) {
+                                        $http.delete('/surveys/'+id)
+                                        .then(function(response) {
+                                                analyzeResults(response.data, "Deleted");
+                                                mySurvey();
+                                        }, function(response){
+                                                console.log(response);
+                                        });
+                                }
                         }
                 }
 

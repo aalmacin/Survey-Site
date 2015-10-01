@@ -5,7 +5,7 @@
                         <p ng-message="Description must be added."></p>
                 </div>
                 <div ng-show="errors.length > 0" role="alert" class='errors alert alert-danger'>
-                        <p ng-repeat="error in errors">{{ error }}</p>
+                        <p ng-repeat="error in errors">{{ error }}<br></p>
                 </div>
 
                 <div class="alert alert-success" ng-show="successMsg">{{ successMsg }}</div>
