@@ -5,6 +5,7 @@
                 $scope.loginUser = {};
                 $scope.errors = [];
 
+                // Make an api call to login after a form submit and then login the user.
                 $scope.login = function() {
                         $scope.errors = [];
                         $http.post('/login', $scope.loginUser).then(function(response) {
@@ -12,6 +13,7 @@
                                         $scope.errors = [response.data.message];
                                         $scope.loginUser = {};
                                 } else {
+                                        // Reload to let the backend determine which view to render
                                         $window.location.reload();
                                 }
                         });

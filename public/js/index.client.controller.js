@@ -1,5 +1,6 @@
 (function() {
 var mainApp = angular.module("mainApp", ["ngRoute", "ngMessages", "ngCsv"]);
+        // Setup the routing for logged in users.
         mainApp.config(function($routeProvider) {
                 $routeProvider
                         .when( "/", {
