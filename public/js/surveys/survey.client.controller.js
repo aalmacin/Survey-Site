@@ -208,8 +208,32 @@
                         deleteSurveySetup();
                 }
 
+                if ($("#reportPage").length > 0) {
+                        $scope.getReport = function() {
+                                var returnArr = new Array();
+                                var questions = $scope.survey.questions;
+                                for(var i = 0 ; i < questions.length ; i++) {
+                                        var question = questions[i];
+
+                                        var answers = new Array();
+
+                                        for(var j = 0 ; j < question.answers.length ; j++) {
+                                                var answer = question.answers[j];
+                                                answers.push(answer.text);
+                                                answers.push(answer.responses.length);
+                                        }
+                                        returnArr.push({
+                                                text: question.text,
+                                                answers: answers
+                                        });
+                                }
+                                console.log(returnArr);
+                                return returnArr;
+                        }
+                }
                 if ($("#respondPage").length > 0 || $("#reportPage").length > 0) {
                         responseData();
+
                 }
         }
 

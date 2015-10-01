@@ -135,17 +135,19 @@ exports.response = function(req, res) {
 }
 
 exports.respond = function(req, res) {
-        for (var key in req.body){
-                var val = req.body[key];
-                Survey.find({"questions.answers._id" : val}).exec(function(error, data) {
-                        for(var i = 0 ; i < data.length ; i++) {
-                                var survey = data[i];
+        var surveyId = req.body['surveyID'];
+        delete req.body['surveyID'];
+        Survey.find({"_id":surveyId}).exec(function(error, data) {
+                for(var i = 0 ; i < data.length ; i++) {
+                        var survey = data[i];
+                        for (var key in req.body){
+                                var val = req.body[key];
                                 var subdoc = survey.questions.id(key).answers.id(val);
                                 subdoc.responses.push(Date.now());
-                                survey.save();
                         }
-                });
-        }
+                        survey.save();
+                }
+        });
         res.redirect('/allsurveys#/?msg=Successfully sent a response');
 }
 

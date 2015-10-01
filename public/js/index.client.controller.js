@@ -1,5 +1,5 @@
 (function() {
-var mainApp = angular.module("mainApp", ["ngRoute", "ngMessages"]);
+var mainApp = angular.module("mainApp", ["ngRoute", "ngMessages", "ngCsv"]);
         mainApp.config(function($routeProvider) {
                 $routeProvider
                         .when( "/", {
