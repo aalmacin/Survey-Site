@@ -53,18 +53,18 @@ ___
 ![alt text](wireframes/surveys.png "A wireframe sample for the site")
 ___
 ### Screen Captures
-![alt text](screenshots/1.jpg "A screenshot sample of the site")
-![alt text](screenshots/2.jpg "A screenshot sample of the site")
-![alt text](screenshots/3.jpg "A screenshot sample of the site")
-![alt text](screenshots/4.jpg "A screenshot sample of the site")
-![alt text](screenshots/5.jpg "A screenshot sample of the site")
-![alt text](screenshots/6.jpg "A screenshot sample of the site")
-![alt text](screenshots/7.jpg "A screenshot sample of the site")
-![alt text](screenshots/8.jpg "A screenshot sample of the site")
-![alt text](screenshots/9.jpg "A screenshot sample of the site")
-![alt text](screenshots/10.jpg "A screenshot sample of the site")
-![alt text](screenshots/11.jpg "A screenshot sample of the site")
-![alt text](screenshots/12.jpg "A screenshot sample of the site")
+![alt text](screenshots/1.png "A screenshot sample of the site")
+![alt text](screenshots/2.png "A screenshot sample of the site")
+![alt text](screenshots/3.png "A screenshot sample of the site")
+![alt text](screenshots/4.png "A screenshot sample of the site")
+![alt text](screenshots/5.png "A screenshot sample of the site")
+![alt text](screenshots/6.png "A screenshot sample of the site")
+![alt text](screenshots/7.png "A screenshot sample of the site")
+![alt text](screenshots/8.png "A screenshot sample of the site")
+![alt text](screenshots/9.png "A screenshot sample of the site")
+![alt text](screenshots/10.png "A screenshot sample of the site")
+![alt text](screenshots/11.png "A screenshot sample of the site")
+![alt text](screenshots/12.png "A screenshot sample of the site")
 
 ___
 ### Future Updates
