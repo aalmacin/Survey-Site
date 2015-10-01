@@ -1,4 +1,4 @@
-![alt text](https://photos-5.dropbox.com/t/2/AAC8crThQseJhabSC4Kxr6GZFLxSR3a-SG4CyRKTmTgsiA/12/66131039/png/32x32/1/1443175200/0/2/AceDigitalLogo.png/CN-oxB8gASACIAMgBCAFIAYgBygC/7bCiaqb-A5pS7mCKrvAtHm9LghjIMV1Eqz__0FWWRk8?size=1024x768&size_mode=2 "The ace digital logo")
+![alt text](public/img/logo.png "The ace digital logo")
 # AceDigital Survey Site
 ___
 ### Table of Contents
@@ -22,33 +22,53 @@ Ace Digital's Survey site is a very simple responsive survey site. The main obje
 ###### Survey
 * Creation a survey question from a template. (Multiple Choice)
 * User's ability to Edit and Delete survey questions
-* Everyone can submit a response to a survey question
+* Everyone can submit a response to a survey question. Just click the respond button on an active survey and you can answer the questions.
 * Activation and expiration date of a survey.
 
 ###### Secure Reporting Section
 * Show number of respondents
 * Show survey results/statistics
-* Export survey results/statistics
+* Export survey results/statistics to a csv format
 
 #### Site map
 * Home - /
 * Users
-  * Register - /#/register
-  * Login - /#/login
-  * Logout - /#/logout
+  * Register - /register
+  * Login - /login
   * Edit Profile - /#/editprofile
 * Survey
-  * List - /#/surveys
+  * All Surveys - /allsurveys
+  * My Surveys - /#/mysurveys
   * Respond - /#/surveys/:surveyid
-  * Create - /#/surveys/create
-  * Edit - /#/surveys/edit
+  * Create - /#/surveys/newSurvey
+  * Edit - /#/surveys/:surveyid/edit
 * Reporting Section
   * Report - /#/surveys/:surveyid/report
   
 ___
 ### Wireframes
+![alt text](wireframes/editProfile.png "A wireframe sample for the site")
+![alt text](wireframes/login.png "A wireframe sample for the site")
+![alt text](wireframes/register.png "A wireframe sample for the site")
+![alt text](wireframes/surveys.png "A wireframe sample for the site")
 ___
 ### Screen Captures
+![alt text](screenshots/1.jpg "A screenshot sample of the site")
+![alt text](screenshots/2.jpg "A screenshot sample of the site")
+![alt text](screenshots/3.jpg "A screenshot sample of the site")
+![alt text](screenshots/4.jpg "A screenshot sample of the site")
+![alt text](screenshots/5.jpg "A screenshot sample of the site")
+![alt text](screenshots/6.jpg "A screenshot sample of the site")
+![alt text](screenshots/7.jpg "A screenshot sample of the site")
+![alt text](screenshots/8.jpg "A screenshot sample of the site")
+![alt text](screenshots/9.jpg "A screenshot sample of the site")
+![alt text](screenshots/10.jpg "A screenshot sample of the site")
+![alt text](screenshots/11.jpg "A screenshot sample of the site")
+![alt text](screenshots/12.jpg "A screenshot sample of the site")
+
 ___
 ### Future Updates
+  * More statistical data
+  * Additional question templates
+  * Added user roles
 ___
