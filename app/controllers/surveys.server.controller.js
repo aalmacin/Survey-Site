@@ -17,7 +17,8 @@ var getErrors = function(error, allErrors) {
 }
 
 exports.all = function(req, res) {
-        Survey.find({}).populate('user', 'username').exec(function(err, data) {
+        var today = new Date();
+        Survey.find({"activation" : {$lte: today}, "expiration" : {$gt: today}}).populate('user', 'username').exec(function(err, data) {
                 res.json(data);
         });
 }
