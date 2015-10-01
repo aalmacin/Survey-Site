@@ -4,11 +4,15 @@
 var express = require('express'),
         methodOverride = require('method-override'),
         passport = require('passport'),
+        config = require('./config'),
         session = require('express-session'),
         bodyParser = require('body-parser');
 
 module.exports = function(mongoose) {
+        // Require jade for server-side view templating.
         require('jade');
+
+        // Mongoose and express are initialized
         var db = mongoose();
         var app = express();
 
@@ -19,13 +23,15 @@ module.exports = function(mongoose) {
                 extended: true
         }));
 
+        // Set the view engine to jade. EJS is another good choice.
         app.set('views', './app/views');
         app.set('view engine', 'jade');
 
+        // Set the session to be used by the application
         app.use(session({
                 saveUninitialized: true,
                 resave: true,
-                secret: 'JUSTANOTHERTHINGTOBEREPLACEDLATer'
+                secret: config.secret
         }));
 
         // Setup our app to use passport middlewares
@@ -36,6 +42,7 @@ module.exports = function(mongoose) {
         require('../routes/users.server.routes.js')(app);
         require('../routes/surveys.server.routes.js')(app);
 
+        // Make sure that we make the public folder accessible. If this is not set, when trying to access client side files, it will be treated as part of the express routing.
         app.use('/', express.static('./public'));
 
         return app;

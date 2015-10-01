@@ -32,7 +32,17 @@
 
                 var responseData = function() {
                         $http.get('/surveys/' + $routeParams.id + '/response').then(function(response) {
-                                $scope.survey = response.data;
+                                var survey = response.data;
+                                for(var i = 0 ; i < survey.questions.length ; i++) {
+                                        var question = survey.questions[i];
+                                        for(var j = 0 ; j < question.answers.length ; j++) {
+                                                var answer = question.answers[j];
+                                                for(var k = 0 ; k < answer.responses.length ; k++) {
+                                                        survey.questions[i].answers[j].responses[k] = (new Date(answer.responses[k])).toLocaleString();
+                                                }
+                                        }
+                                }
+                                $scope.survey = survey;
                         });
                 }
 
@@ -227,7 +237,6 @@
                                                 answers: answers
                                         });
                                 }
-                                console.log(returnArr);
                                 return returnArr;
                         }
                 }

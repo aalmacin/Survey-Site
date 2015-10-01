@@ -3,7 +3,9 @@
 */
 var Survey = require('mongoose').model('Survey');
 
+// Get the errors sent back by mongoose and organize these errors into an array of errors. This array will be used by Angular in displaying error messages to the user.
 var getErrors = function(error, allErrors) {
+        // If there is any error, check what errors are they and add the message into the errors array
         if(error.errors) {
                 var errors = error.errors;
                 if(errors.description) {
@@ -16,6 +18,9 @@ var getErrors = function(error, allErrors) {
         return allErrors;
 }
 
+/*
+        Show all the active surveys. If a survey already expired, it will not be returned.
+*/
 exports.all = function(req, res) {
         var today = new Date();
         Survey.find({"activation" : {$lte: today}, "expiration" : {$gt: today}}).populate('user', 'username').exec(function(err, data) {

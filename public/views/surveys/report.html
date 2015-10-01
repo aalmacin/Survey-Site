@@ -31,7 +31,7 @@
                 <div>
                         <h4>Response to {{ question.text }}</h4>
                         <div class="answers" ng-repeat="answer in question.answers">
-                                <div class="responses" ng-repeat="response in answer.responses">
+                                <div class="responses" ng-repeat="response in answer.responses track by $index">
                                         <p>Responded <b>{{ answer.text }}</b> at {{ response }}</p>
                                 </div>
                         </div>
